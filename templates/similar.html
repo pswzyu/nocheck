@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %} {% trans "Similar Sites" %} {% endblock %}
+
+{% block main %}
+<div class="row">
+  <div class="jumbotron">
+    <h1>{% trans "Similar Sites" %}</h1>
+    <p>{% trans "Find additional information at the following sites." %}</p>
+    <ul class="nav nav-pills nav-stacked">
+      <li class="active">
+        <a target="_blank" href="https://ceac.state.gov/CEACStatTracker/">DoS Visa Status Check</a>
+      </li>
+      <li class="active">
+        <a target="_blank" href="http://checkvisa.info/?__utm_source=checkcheck">CheckVisa.info</a>
+      </li>
+      <li class="active">
+        <a target="_blank" href="http://checkee.info/?__utm_source=checkcheck">checkee.info</a>
+      </li>
+    </ul>
+  </div>
+</div>
+{% endblock %}

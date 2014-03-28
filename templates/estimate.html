@@ -1,0 +1,248 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %} {% trans "Estimate Administrative Processing Clearance Date" %} {% endblock %}
+
+{% block main %}
+<style>
+  #submit, #result, #inaccurate {
+    display: none;
+  }
+</style>
+<div class="row">
+  <div class="col-md-12">
+    <h2>{% trans "Estimate Administrative Processing Clearance Date" %}</h2>
+  </div>
+  <div id="dataarea" class="col-md-6 col-md-offset-3">
+    <div id="loading" class="alert alert-success">Loading...</div>
+    <form id="prediction_form" class="form-horizontal" role="form">
+      <div class="form-group">
+        <label class="col-lg-4 control-label">{% trans "Visa Type" %}</label>
+        <div class="col-lg-8">
+          <select name="visa_type" class="form-control">
+            {% for v, visa_type_label in visa_type %}
+            <option value="{{v}}">{{visa_type_label}}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-lg-4 control-label">{% trans "Application Date" %}</label>
+        <div class="col-lg-8">
+          <input name="application_date" type="text" class="form-control datepicker" placeholder="Date">
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-lg-offset-4 col-lg-8">
+          <div class="checkbox">
+            <label>
+              <input name="exclude_biased" type="checkbox"> {% trans "Exclude Obviously Biasd Data" %}
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-lg-offset-4 col-lg-8">
+          <a href="#result" onclick="calc_estimation();" id="submit" class="btn btn-success">{% trans "Calculate" %}</a>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <a name="result"></a>
+  <div id="result" class="col-md-12">
+    <div class="row">
+      <div class="col-md-offset-2 col-md-8">
+        <div class="panel panel-primary">
+          <div class="panel-heading">
+            <h3 class="panel-title">{% trans "Prediction" %}</h3>
+          </div>
+
+          <div class="panel-body">
+            <h4>{% blocktrans %}Your application may clear around <span id="prediction_date"></span>.{% endblocktrans %}</h4>
+            <h4 id="inaccurate">{% blocktrans %}However, this prediction is considered <em>inaccurate and meaningless</em>.{% endblocktrans %}</h4>
+            <p>{% blocktrans %}The prediction is based on linear regression.{% endblocktrans %}</p>
+            <p>{% blocktrans %}Estimated <span id="prediction_days" class="label label-warning"></span> days, <span id="wait_days" class="label label-success"></span> days to go.{% endblocktrans %}</p>
+            <h5>{% blocktrans %}Progress{% endblocktrans %}</h5>
+            <div class="progress progress-striped active">
+              <div id="current_progress" class="progress-bar progress-bar-info" role="progressbar" style="width: 40%">
+              </div>
+            </div>
+            <p>
+              <span class="label label-primary">{% trans "Prediction X-Axis" %}</span> <span id="x_axis"></span>
+            </p>
+            <p>
+              <span class="label label-success">{% trans "Slope" %}</span> <span id="slope"></span>
+            </p>
+            <p>
+              <span class="label label-success">{% trans "Intercept" %}</span> <span id="intercept"></span>
+            </p>
+            <p>
+              <span class="label label-warning">{% trans "Pearson product-moment correlation coefficient (r)" %}</span> <span id="r_value"></span>
+            </p>
+            <p>
+              <span class="label label-warning">{% trans "p Value" %}</span> <span id="p_value"></span>
+            </p>
+
+            <p>
+              <span class="label label-warning">{% trans "Standard Error" %}</span> <span id="std_err"></span>
+            </p>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">{% trans "Linear Trendlines" %}</h3>
+          </div>
+          <div class="panel-body">
+            <div class="graph" id="plot"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">{% trans "Exponential Trendlines" %}</h3>
+          </div>
+          <div class="panel-body">
+            <div class="graph" id="plot_exp"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block end %}
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.2.0/js/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script>
+(function($){
+  $.fn.serializeJSON = function(){
+    var json = {}
+    var form = $(this);
+    form.find('input, select').each(function(){
+      var val
+      if (!this.name) return;
+
+      if ('radio' === this.type) {
+        if (json[this.name]) { return; }
+
+        json[this.name] = this.checked ? this.value : '';
+      } else if ('checkbox' === this.type) {
+        val = json[this.name];
+
+        if (!this.checked) {
+          if (!val) { json[this.name] = ''; }
+        } else {
+          json[this.name] =
+            typeof val === 'string' ? [val, this.value] :
+            $.isArray(val) ? $.merge(val, [this.value]) :
+            this.value;
+        }
+      } else {
+        json[this.name] = this.value;
+      }
+    })
+    return json;
+  }
+})(jQuery);
+
+google.load("visualization", "1", {packages:["corechart"]});
+$(document).ready(function() {
+  $('#loading').css('display', 'none');
+  $('#submit').css('display', 'inline-block');
+  $('.datepicker').datepicker({
+    format: 'yyyy-mm-dd',
+  });
+});
+function calc_estimation() {
+  $('#inaccurate').css('display', 'none');
+  var data = $('#prediction_form').serializeJSON();
+  $.ajax({
+    url: '{% url "estimate_ajax" %}',
+    data: data,
+    success: function(data) {
+      if (data['status'] != 'ok') {
+        $('#loading').css('display', 'block');
+        $('#loading').html(data['message']);
+        return;
+      }
+      $('#dataarea').css('display', 'none');
+      $('#result').css("display", "block");
+      var plot_data = $.merge([['{% trans "Days" %}', '{% trans "Days since 90 days ago" %}']], data['raw_data'])
+      var r_data = data['regression_data'];
+      $('#prediction_date').text(data['prediction']);
+      $('#x_axis').text(data['x_axis']);
+      $('#prediction_days').text(data['p_days']);
+      $('#wait_days').text(data['wait_days']);
+      $('#current_progress').css('width', data['progress'] + "%");
+      $('#slope').text(r_data['slope']);
+      $('#intercept').text(r_data['intercept']);
+      $('#r_value').text(r_data['r_value']);
+      $('#p_value').text(r_data['p_value']);
+      $('#std_err').text(r_data['std_err']);
+      if (!data['prediction_accuracy']) {
+        $('#inaccurate').css('display', 'block');
+      }
+      drawChart(plot_data);
+    },
+  });
+}
+function drawChart(data) {
+  var gdata = google.visualization.arrayToDataTable(data);
+  var options = {
+    title: '{% trans "Check Days Scattered Data" %}',
+    vAxis: {
+      title: '{% trans "Days" %}',
+      minValue: 0,
+      maxValue: 90,
+    },
+    hAxis: {
+      title: '{% trans "Days since 90 days ago" %}',
+      minValue: 0,
+    },
+    trendlines: {
+      0: {
+        opacity: 0.2,
+        lineWidth: 8,
+        color: 'blue',
+      },
+    },
+  };
+
+  var options_exp = {
+    title: '{% trans "Check Days Scattered Data" %}',
+    vAxis: {
+      title: '{% trans "Days" %}',
+      minValue: 0,
+      maxValue: 90,
+    },
+    hAxis: {
+      title: '{% trans "Days since 90 days ago" %}',
+      minValue: 0,
+    },
+    trendlines: {
+      0: {
+        type: 'exponential',
+        opacity: 0.7,
+        lineWidth: 8,
+        color: 'green',
+      },
+    },
+  };
+  new google.visualization.ScatterChart(
+      document.getElementById('plot')).draw(gdata, options);
+
+  new google.visualization.ScatterChart(
+      document.getElementById('plot_exp')).draw(gdata, options_exp);
+}
+
+</script>
+{% endblock %}

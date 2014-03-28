@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %} {% trans "Raw Data" %} {% endblock %}
+
+{% block main %}
+
+<div class="row">
+  <div class="jumbotron">
+    <h1>{% trans "Download Raw Data" %}</h1>
+    {% blocktrans %}
+    <p>Download raw data by clicking the button blow.</p>
+    <p>Data was provided in CSV format in UTF-8 encoding.</p>
+    {% endblocktrans %}
+    <p>
+    <a class="btn btn-lg btn-primary" href="{% url 'download_raw_data' %}">{% trans "Download" %}</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

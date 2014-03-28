@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %} {% trans "Dashboard" %} {% endblock %}
+
+{% block main %}
+<div class="alert alert-dismissable alert-info">
+  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+  <p>{% trans "We don't have a lot of sample. Data might be biased." %}</p>
+  <p>{% trans "Charting service might be unstable in China." %}</p>
+</div>
+<h2>{% trans "Important Metrics" %}</h2>
+<div class="row">
+  <div class="col-md-12">
+    <p>
+      <span class="label label-primary">{% trans "Most recent clearance issued" %}</span> <span class="badge">{{ last_clear_at }}</span>
+    </p>
+    <p>
+      <span class="label label-success">{% trans "Newest application cleared" %}</span> <span class="badge">{{ last_application_cleared }}</span>
+    </p>
+    <p>
+      <span class="label label-info">{% trans "Avg wait time" %}</span> <span class="badge">{{ avg_wait_time }} {% trans "days" %}</span>
+    </p>
+  </div>
+</div>
+
+<h2>{% trans "90 days Overview" %}</h2>
+<div class="row">
+  <div class="col-md-12">
+    <table class="table table-bordered table-hover">
+      <thead>
+        <tr>
+          <th>{% trans "Visa type" %}</th>
+          <th>{% trans "Avg wait time" %}</th>
+          <th>{% trans "Reported applicants" %}</th>
+          <th>{% trans "Cleared applications" %}</th>
+          <th>{% trans "Clearance ratio" %}</th>
+          <th>{% trans "Most recent clearance issued" %}</th>
+          <th>{% trans "Newest application cleared" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for visa_type, v in aggr_data.items %}
+      <tr>
+        <td>
+          <a href="{% url 'visa_type_details' visa_type %}">
+            {{ visa_type }}
+          </a>
+        </td>
+        <td>{{ v.avg_wait }} {% trans "days" %}</td>
+        <td>{{ v.applicants }}</td>
+        <td>{{ v.cleared }}</td>
+        <td>{{ v.cleared_ratio }}</td>
+        <td>{{ v.last_clearance }}</td>
+        <td>{{ v.last_application }}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+<h2>{% trans "Check and Clearance Date Distribution" %}</h2>
+<div class="row">
+  <div id="check_distribution" class="chart col-md-12">
+  </div>
+  <div id="clear_distribution" class="chart col-md-12">
+  </div>
+</div>
+<h2>{% trans "Clear Notification Weekday Distribution" %}</h2>
+<div class="row">
+  <div id="weekday_analysis" class="chart col-md-12">
+  </div>
+</div>
+<h2>{% trans "Data Analysis by Visa Type" %}</h2>
+<div id="plot" class="row">
+</div>
+
+{% endblock %}
+{% block end %}
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script>
+google.load("visualization", "1", {packages:["corechart"]});
+google.setOnLoadCallback(drawChart);
+
+var aggr_plot_data = JSON.parse("{{aggr_plot_data|escapejs}}");
+var weekday_data = JSON.parse("{{weekday|escapejs}}");
+var total_checked = JSON.parse("{{total_checked|escapejs}}");
+var total_cleared = JSON.parse("{{total_cleared|escapejs}}");
+function createDiv(div_name) {
+  var final_div_name = 'gen_div_' + div_name;
+  $('#plot').append('<div class="col-md-6 chart" id="' + final_div_name + '"></div>');
+  return final_div_name;
+}
+function plotData(visa_type, target, data) {
+  var data_header = [['{% trans "Date" %}', '{% trans "Avg wait time" %}']];
+  var data = google.visualization.arrayToDataTable($.merge(data_header, data));
+
+  var options = {
+    title: visa_type + ' {% trans "visa" %}',
+    vAxis: {
+      title: '{% trans "Days" %}',
+      minValue: 0,
+      // maxValue: 60,
+    },
+    hAxis: {
+      title: '{% trans "Date" %}',
+      slantedText: true,
+      slantedTextAngle: 15,
+      showTextEvery: 3
+    },
+    titleTextStyle: {
+      fontSize: 20,
+    },
+    curveType: 'function',
+    pointSize: 4,
+  };
+
+  var chart = new google.visualization.LineChart(
+      document.getElementById(target));
+  chart.draw(data, options);
+
+}
+function drawChart() {
+  $.each(aggr_plot_data, function(index, value) {
+    plotData(index, createDiv(index), value);
+  });
+
+  // Draw weekday distribution
+  var weekday_header = [['{% trans "Day of week" %}', '{% trans "Count" %}']];
+  var w_data = google.visualization.arrayToDataTable(
+      $.merge(weekday_header, weekday_data));
+
+  var w_options = {
+    title: '{% trans "Weekday Distribution" %}',
+    seriesType: "bars",
+    vAxis: {title: '{% trans "Count" %}'},
+    hAxis: {title: '{% trans "Weekday" %}'},
+  };
+
+  var chart = new google.visualization.ComboChart(
+      document.getElementById('weekday_analysis'));
+  chart.draw(w_data, w_options);
+
+  var data_header = [['{% trans "Date" %}', '{% trans "Count" %}']];
+  var c_options = {
+    title: '{% trans "Check Distribution" %}',
+    seriesType: "bars",
+    vAxis: {title: '{% trans "Count" %}'},
+    hAxis: {
+      title: '{% trans "Date" %}',
+      slantedText: true,
+      slantedTextAngle: 15,
+      showTextEvery: 5
+    },
+  };
+
+  var c_data = google.visualization.arrayToDataTable($.merge(data_header,
+                                                             total_checked));
+  var chart_c = new google.visualization.ComboChart(
+      document.getElementById('check_distribution'));
+  chart_c.draw(c_data, c_options);
+
+  var data_header = [['{% trans "Date" %}', '{% trans "Count" %}']];
+  var d_options = {
+    title: '{% trans "Clear Distribution" %}',
+    seriesType: "bars",
+    vAxis: {title: '{% trans "Count" %}'},
+    hAxis: {
+        title: '{% trans "Date" %}',
+        slantedText: true,
+        slantedTextAngle: 15,
+        showTextEvery: 5
+    },
+  };
+  var d_data = google.visualization.arrayToDataTable($.merge(data_header,
+                                                             total_cleared));
+  var chart_d = new google.visualization.ComboChart(
+      document.getElementById('clear_distribution'));
+  chart_d.draw(d_data, d_options);
+}
+
+</script>
+{% endblock %}

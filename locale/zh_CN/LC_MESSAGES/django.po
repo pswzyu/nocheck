@@ -1,0 +1,444 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-10-21 20:12-0700\n"
+"PO-Revision-Date: 2013-10-22 11:13+0800\n"
+"Last-Translator: Difan Zhang <difan@me.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 1.5.7\n"
+
+#: check/models.py:15
+msgid "Check date"
+msgstr "Check 日期"
+
+#: check/models.py:17
+msgid "Final decision date"
+msgstr "最终决定日期"
+
+#: check/models.py:19 templates/visa_details.html:86
+#: templates/visa_details.html.py:91
+msgid "Consulate"
+msgstr "领事馆"
+
+#: check/models.py:21 templates/visa_details.html:86
+#: templates/visa_details.html.py:91
+msgid "Major"
+msgstr "专业"
+
+#: templates/about.html:3 templates/about.html.py:9 templates/base.html:43
+msgid "About"
+msgstr "关于"
+
+#: templates/about.html:10
+msgid ""
+"\n"
+"    <p>CheckCheck is a service to track US Visa <em>Administrative "
+"Processing</em> (a.k.a. <em>Check</em>) cases and provide estimations.</p>\n"
+"    <p>We collect data from various sources, mostly from <em>checkee.info</"
+"em>. Special thanks to owner of this site.</p>\n"
+"    <p>To report a case, please go to <a href=\"http://checkee.info/?"
+"__utm_source=checkcheck\" target=\"_blank\">checkee.info</a>.</p>\n"
+"    <p>Good luck to all US visa applicants.</p>\n"
+"    "
+msgstr ""
+"\n"
+"    <p>CheckCheck 是追踪并分析美国签证 <em>Administrative Processing</em> (俗"
+"称 check) 的工具，并提供一些估计。</p>\n"
+"    <p>我们从多个站点采集数据，但主要是 <em>checkee.info</em>。我们对这个站点"
+"的运营者表示感谢。</p>\n"
+"    <p>若想报告 check 案例，请前往 <a href=\"http://checkee.info/?"
+"__utm_source=checkcheck\" target=\"_blank\">checkee.info</a>。</p>\n"
+"    <p>祝你好运。</p>\n"
+"    "
+
+#: templates/about.html:16
+msgid "Contact"
+msgstr "联系"
+
+#: templates/about.html:17
+msgid ""
+"\n"
+"    <p>Comments can be sent to <em>info</em> at <em>checkcheck</em> dot "
+"<em>info</em>.</p>\n"
+"    "
+msgstr ""
+"\n"
+"    <p>建议、意见和反馈可以写信寄到 <em>info</em> at <em>checkcheck</em> dot "
+"<em>info</em>。</p>\n"
+"    "
+
+#: templates/about.html:20
+msgid "Open Source"
+msgstr "开源"
+
+#: templates/about.html:21
+msgid ""
+"\n"
+"    <p>CheckCheck is an open source project released under New BSD License."
+"<br/>\n"
+"    <a href=\"https://bitbucket.org/tifan/checkcheck/overview\" target="
+"\"_blank\">Project Homepage</a>.</p>\n"
+"    "
+msgstr ""
+"\n"
+"    <p>CheckCheck 是一个新 BSD 协议下授权的开源项目。<br/>\n"
+"    <a href=\"https://bitbucket.org/tifan/checkcheck/overview\" target="
+"\"_blank\">项目主页</a>。</p>\n"
+"    "
+
+#: templates/base.html:40 templates/dashboard.html:3
+msgid "Dashboard"
+msgstr "Dashboard"
+
+#: templates/base.html:41 templates/raw_data.html:3
+msgid "Raw Data"
+msgstr "原始数据"
+
+#: templates/base.html:42
+msgid "Estimate Clear Date"
+msgstr "预计 Clear 日期"
+
+#: templates/base.html:44 templates/similar.html:3 templates/similar.html.py:8
+msgid "Similar Sites"
+msgstr "类似网站"
+
+#: templates/base.html:56
+msgid "Project Homepage"
+msgstr "项目首页"
+
+#: templates/dashboard.html:8
+msgid "We don't have a lot of sample. Data might be biased."
+msgstr "我们没有很多的样本。数据可能会失之偏颇。"
+
+#: templates/dashboard.html:9
+msgid "Charting service might be unstable in China."
+msgstr "绘图服务在中国可能不稳定。"
+
+#: templates/dashboard.html:11
+msgid "Important Metrics"
+msgstr "重要指标"
+
+#: templates/dashboard.html:15 templates/dashboard.html.py:37
+msgid "Most recent clearance issued"
+msgstr "最近 Clear 日期"
+
+#: templates/dashboard.html:18 templates/dashboard.html.py:38
+msgid "Newest application cleared"
+msgstr "Clear 的最新申请"
+
+#: templates/dashboard.html:21 templates/dashboard.html.py:33
+#: templates/dashboard.html:94
+msgid "Avg wait time"
+msgstr "平均等待时间"
+
+#: templates/dashboard.html:21 templates/dashboard.html.py:49
+msgid "days"
+msgstr "天"
+
+#: templates/dashboard.html:26
+msgid "90 days Overview"
+msgstr "90天概览"
+
+#: templates/dashboard.html:32
+msgid "Visa type"
+msgstr "签证类型"
+
+#: templates/dashboard.html:34
+msgid "Reported applicants"
+msgstr "报告的申请者数量"
+
+#: templates/dashboard.html:35
+msgid "Cleared applications"
+msgstr "Clear 的申请者数量"
+
+#: templates/dashboard.html:36
+msgid "Clearance ratio"
+msgstr "Clear 比例"
+
+#: templates/dashboard.html:61
+msgid "Check and Clearance Date Distribution"
+msgstr "Check 以及 Clearance 日期分布"
+
+#: templates/dashboard.html:68
+msgid "Clear Notification Weekday Distribution"
+msgstr "Clear 星期分布"
+
+#: templates/dashboard.html:73
+msgid "Data Analysis by Visa Type"
+msgstr "按签证类别的数据分析"
+
+#: templates/dashboard.html:94 templates/dashboard.html.py:105
+#: templates/dashboard.html:143 templates/dashboard.html.py:149
+#: templates/dashboard.html:162 templates/dashboard.html.py:168
+#: templates/visa_details.html:48 templates/visa_details.html.py:51
+msgid "Date"
+msgstr "日期"
+
+#: templates/dashboard.html:98
+msgid "visa"
+msgstr "签证"
+
+#: templates/dashboard.html:100 templates/estimate.html:179
+#: templates/estimate.html.py:203 templates/estimate.html:223
+#: templates/visa_details.html:96 templates/visa_details.html.py:101
+msgid "Days"
+msgstr "天"
+
+#: templates/dashboard.html:128
+msgid "Day of week"
+msgstr "星期几"
+
+#: templates/dashboard.html:128 templates/dashboard.html.py:135
+#: templates/dashboard.html:143 templates/dashboard.html.py:147
+#: templates/dashboard.html:162 templates/dashboard.html.py:166
+msgid "Count"
+msgstr "数量"
+
+#: templates/dashboard.html:133
+msgid "Weekday Distribution"
+msgstr "星期分布"
+
+#: templates/dashboard.html:136
+msgid "Weekday"
+msgstr "平日"
+
+#: templates/dashboard.html:145
+msgid "Check Distribution"
+msgstr "Check 分布"
+
+#: templates/dashboard.html:164
+msgid "Clear Distribution"
+msgstr "Clear 分布"
+
+#: templates/estimate.html:3 templates/estimate.html.py:13
+msgid "Estimate Administrative Processing Clearance Date"
+msgstr "估计 Check 完毕时间"
+
+#: templates/estimate.html:19
+msgid "Visa Type"
+msgstr "签证类型"
+
+#: templates/estimate.html:29 templates/visa_details.html:86
+#: templates/visa_details.html.py:91 templates/visa_details.html:96
+msgid "Application Date"
+msgstr "申请日期"
+
+#: templates/estimate.html:38
+msgid "Exclude Obviously Biasd Data"
+msgstr "排除明显偏离实际情况的数据"
+
+#: templates/estimate.html:45
+msgid "Calculate"
+msgstr "计算"
+
+#: templates/estimate.html:57
+msgid "Prediction"
+msgstr "预测"
+
+#: templates/estimate.html:61
+msgid "Your application may clear around <span id=\"prediction_date\"></span>."
+msgstr "你的申请可能在 <span id=\"prediction_date\"></span> 附近 Clear。"
+
+#: templates/estimate.html:62
+msgid ""
+"However, this prediction is considered <em>inaccurate and meaningless</em>."
+msgstr "但是，系统认为这个预测是 <em>不准确且毫无意义</em>的。"
+
+#: templates/estimate.html:63
+msgid "The prediction is based on linear regression."
+msgstr "预测是使用最小二乘法线性回归得出的。"
+
+#: templates/estimate.html:64
+msgid ""
+"Estimated <span id=\"prediction_days\" class=\"label label-warning\"></span> "
+"days, <span id=\"wait_days\" class=\"label label-success\"></span> days to "
+"go."
+msgstr ""
+"估计 <span id=\"prediction_days\" class=\"label label-warning\"></span> 天，"
+"还需等待 <span id=\"wait_days\" class=\"label label-success\"></span> 天。"
+
+#: templates/estimate.html:65
+msgid "Progress"
+msgstr "进度"
+
+#: templates/estimate.html:71
+msgid "Prediction X-Axis"
+msgstr "X 轴"
+
+#: templates/estimate.html:74
+msgid "Slope"
+msgstr "斜率"
+
+#: templates/estimate.html:77
+msgid "Intercept"
+msgstr "截距"
+
+#: templates/estimate.html:80
+msgid "Pearson product-moment correlation coefficient (r)"
+msgstr "皮尔逊积矩相关系数 (r)"
+
+#: templates/estimate.html:83
+msgid "p Value"
+msgstr "p 值"
+
+#: templates/estimate.html:87
+msgid "Standard Error"
+msgstr "标准差"
+
+#: templates/estimate.html:99
+msgid "Linear Trendlines"
+msgstr "线性趋势线"
+
+#: templates/estimate.html:110
+msgid "Exponential Trendlines"
+msgstr "指数趋势线"
+
+#: templates/estimate.html:179 templates/estimate.html.py:208
+#: templates/estimate.html:228 templates/visa_details.html:105
+msgid "Days since 90 days ago"
+msgstr "自90天前的天数"
+
+#: templates/estimate.html:201 templates/estimate.html.py:221
+msgid "Check Days Scattered Data"
+msgstr "Check 天数离散数据"
+
+#: templates/raw_data.html:9
+msgid "Download Raw Data"
+msgstr "下载原始数据"
+
+#: templates/raw_data.html:10
+msgid ""
+"\n"
+"    <p>Download raw data by clicking the button blow.</p>\n"
+"    <p>Data was provided in CSV format in UTF-8 encoding.</p>\n"
+"    "
+msgstr ""
+"\n"
+"    <p>点击按钮下载原始数据。</p>\n"
+"    <p>Data was provided in CSV format in UTF-8 encoding.</p>\n"
+"    "
+
+#: templates/raw_data.html:15
+msgid "Download"
+msgstr "下载"
+
+#: templates/similar.html:9
+msgid "Find additional information at the following sites."
+msgstr "在下列站点可以找到更多信息。"
+
+#: templates/visa_details.html:6
+#, python-format
+msgid "%(visa_type)s Visa Details - Recent %(days)s Days"
+msgstr "%(visa_type)s 签证详情 - 最近 %(days)s 天"
+
+#: templates/visa_details.html:11
+msgid "Settings"
+msgstr "设置"
+
+#: templates/visa_details.html:30
+msgid "Pending and Cleared Cases"
+msgstr "处理中以及 Clear 的案子"
+
+#: templates/visa_details.html:33
+msgid "Pending Cases"
+msgstr "处理中的案子"
+
+#: templates/visa_details.html:37
+msgid "Cleared Cases"
+msgstr "Clear 的案子"
+
+#: templates/visa_details.html:48
+msgid "Pending"
+msgstr "等待"
+
+#: templates/visa_details.html:48
+msgid "Cleared"
+msgstr "Clear"
+
+#: templates/visa_details.html:51
+msgid "Percentage Cleared"
+msgstr "Clear 比例"
+
+#: templates/visa_details.html:68 templates/visa_details.html.py:98
+msgid "Raw Data Distribution"
+msgstr "原始数据分布"
+
+#: templates/visa_details.html:79
+msgid "Normalized Data Distribution"
+msgstr "正规化数据分布"
+
+#: templates/visa_details.html:91
+msgid "Clearance Date"
+msgstr "Clear 日期"
+
+#: templates/visa_details.html:91
+msgid "Wait Days"
+msgstr "等待天数"
+
+#~ msgid ""
+#~ "\n"
+#~ "    <p>We model the data for recent 90 days to provide a coarse "
+#~ "estimation.</p>\n"
+#~ "    <p>Due to lack of large amount of data, the data can be very biased "
+#~ "or even meaningless. Use at your own risk.</p>\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    <p>我们使用最近90天的数据进行粗略的预测。</p>\n"
+#~ "    <p>由于数据量不多，预测结果可能非常偏离实际情况，甚至可能非常荒谬。 "
+#~ "Use at your own risk.</p>\n"
+#~ "    "
+
+#~ msgid "Scattered Data"
+#~ msgstr "离散数据"
+
+#~ msgid ""
+#~ "\n"
+#~ "    <p>We are glad to offer raw data download.</p>\n"
+#~ "    <p>Click the button, download the raw data and implement your own "
+#~ "metrics.</p>\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    <p>我们很高兴提供原始数据下载。</p>\n"
+#~ "    <p>按一下按钮，下载原始数据，并实现您自己的指标。</p>\n"
+#~ "    "
+
+#~ msgid "Estimate"
+#~ msgstr "估计"
+
+#~ msgid "Estimate Processing Time"
+#~ msgstr "估计处理时间"
+
+#~ msgid "Contributing"
+#~ msgstr "贡献"
+
+#~ msgid ""
+#~ "\n"
+#~ "    <p>If you are interested in translating the site to your language, "
+#~ "please contact us at <em>checkcheck</em> at <em>difan</em> dot <em>org</"
+#~ "em> dot <em>cn</em>.</p>\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    <p>如果你对翻译这个站点有兴趣，请联系 <em>checkcheck</em> at "
+#~ "<em>difan</em> dot <em>org</em> dot <em>cn</em>.</p>\n"
+#~ "    "
+
+#~ msgid "r Value"
+#~ msgstr "r 值"
+
+#~ msgid "Wait Time"
+#~ msgstr "等待时间"
+
+#~ msgid "Visa application date for most recent clearance"
+#~ msgstr "最近Clear的签证申请日期"

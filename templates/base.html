@@ -1,0 +1,72 @@
+{% load i18n %}<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="title" content="CheckCheck US Visa Tracker" />
+    <meta name="keywords" content="Visa Check, Administrative Processing, 签证check, 美国签证, 签证被check, 签证绿纸, 签证黄纸, F1 签证 check, 敏感专业check, 计算机专业 check, 212(g)签证" />
+    <meta name="description" content="US Visa Administrative Processing Tracker.">
+    <meta name="author" content="Difan Zhang">
+    <link href="//netdna.bootstrapcdn.com/bootswatch/3.0.0/cerulean/bootstrap.min.css" rel="stylesheet">
+    <title>{%block title%}{%endblock%} - CheckCheck</title>
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.2/html5shiv.js"></script>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.2.0/respond.js"></script>
+    <![endif]-->
+    <style>
+      .chart {
+        height: 400px;
+      }
+      #footer {
+        height: 60px;
+        margin-top: 2em;
+        padding-top: 2em;
+        background-color: #f5f5f5;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <!-- Static navbar -->
+    <div class="navbar navbar-default navbar-static-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="{% url 'dashboard' %}">CheckCheck</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="{% url 'dashboard' %}">{%trans "Dashboard" %}</a></li>
+            <li><a href="{% url 'raw_data' %}">{%trans "Raw Data" %}</a></li>
+            <li><a href="{% url 'estimate' %}">{%trans "Estimate Clear Date" %}</a></li>
+            <li><a href="{% url 'about' %}">{%trans "About" %}</a></li>
+            <li><a href="{% url 'similar' %}">{%trans "Similar Sites" %}</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+
+    <div class="container">
+       {% block main %}
+       {% endblock %}
+    </div> <!-- /container -->
+    <div id="footer">
+      <div class="container">
+        <p class="text-muted credit">CheckCheck <a href="https://bitbucket.org/tifan/checkcheck/overview" target="_blank">{% trans "Project Homepage" %}</a></p>
+      </div>
+    </div>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+    {% block end %}
+    {% endblock %}
+    <script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+ })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-2660328-18', 'checkcheck.info');
+ga('send', 'pageview');
+    </script>
+  </body>
+</html>

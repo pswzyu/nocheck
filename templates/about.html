@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %} {% trans "About" %} {% endblock %}
+
+{% block main %}
+
+<div class="row">
+  <div class="jumbotron">
+    <h1>{% trans "About" %}</h1>
+    {% blocktrans %}
+    <p>CheckCheck is a service to track US Visa <em>Administrative Processing</em> (a.k.a. <em>Check</em>) cases and provide estimations.</p>
+    <p>We collect data from various sources, mostly from <em>checkee.info</em>. Special thanks to owner of this site.</p>
+    <p>To report a case, please go to <a href="http://checkee.info/?__utm_source=checkcheck" target="_blank">checkee.info</a>.</p>
+    <p>Good luck to all US visa applicants.</p>
+    {% endblocktrans %}
+    <h2>{% trans "Contact" %}</h2>
+    {% blocktrans %}
+    <p>Comments can be sent to <em>info</em> at <em>checkcheck</em> dot <em>info</em>.</p>
+    {% endblocktrans %}
+    <h2>{% trans "Open Source" %}</h2>
+    {% blocktrans %}
+    <p>CheckCheck is an open source project released under New BSD License.<br/>
+    <a href="https://bitbucket.org/tifan/checkcheck/overview" target="_blank">Project Homepage</a>.</p>
+    {% endblocktrans %}
+  </div>
+</div>
+{% endblock %}

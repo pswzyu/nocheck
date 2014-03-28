@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{{ visa_type }} Visa Details{% endblock %}
+
+{% block main %}
+<h2>{% blocktrans %}{{ visa_type }} Visa Details - Recent {{ days }} Days{% endblocktrans %}</h2>
+<div class="row">
+  <!--div class="col-md-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">{% trans "Settings" %}</h3>
+      </div>
+      <div class="panel-body">
+        <p>Days of data to show:</p>
+        <div class="input-group">
+          <input id="days" type="text" class="form-control">
+          <span class="input-group-btn">
+            <a onclick="showDays();" class="btn btn-default" type="button">Go!</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div-->
+  <div class="col-md-10 col-md-offset-2">
+    <div id="raw_data" class="chart"></div>
+    <div id="norm_data" class="chart"></div>
+    <div id="raw_dist" class="chart"></div>
+  </div>
+</div>
+<h2>{% blocktrans %}Pending and Cleared Cases{% endblocktrans %}</h2>
+<div class="row">
+  <div class="col-md-5">
+    <h3>{% blocktrans %}Pending Cases{% endblocktrans %}</h3>
+    <div id="pending_cases"></div>
+  </div>
+  <div class="col-md-7">
+    <h3>{% blocktrans %}Cleared Cases{% endblocktrans %}</h3>
+    <div id="cleared_cases"></div>
+  </div>
+</div>
+
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script>
+google.load("visualization", "1", {packages:["corechart", "imagebarchart", "table"]});
+google.setOnLoadCallback(drawChart);
+
+var raw_data = JSON.parse("{{raw_data|escapejs}}");
+var raw_header = [['{% trans "Date" %}', '{% trans "Pending" %}', '{% trans "Cleared" %}']];
+
+var norm_data = JSON.parse("{{norm_data|escapejs}}");
+var norm_header = [['{% trans "Date" %}', '{% trans "Percentage Cleared" %}']];
+var pending_cases = JSON.parse("{{pending_cases|escapejs}}");
+var cleared_cases = JSON.parse("{{cleared_cases|escapejs}}");
+var raw_data_dist = JSON.parse("{{raw_data_dist|escapejs}}");
+
+function showDays() {
+  window.location = location.pathname + '?days=' + parseInt($('#days').val());
+}
+
+function drawChart() {
+  var data_raw = google.visualization.arrayToDataTable(
+      $.merge(raw_header, raw_data)
+  );
+
+  var options_raw = {
+    isVertical: true,
+    legend: 'bottom',
+    title: '{% trans "Raw Data Distribution" %}'
+  }
+
+  var data_norm = google.visualization.arrayToDataTable(
+      $.merge(norm_header, norm_data)
+  );
+
+  var options_norm = {
+    isVertical: true,
+    legend: 'bottom',
+    valueLabelsInterval: 10,
+    title: '{% trans "Normalized Data Distribution" %}'}
+  new google.visualization.ImageBarChart(
+      document.getElementById('norm_data')).draw(data_norm, options_norm);
+
+  new google.visualization.ImageBarChart(
+      document.getElementById('raw_data')).draw(data_raw, options_raw);
+
+  var form_header = [['{% trans "Application Date" %}', '{% trans "Consulate" %}', '{% trans "Major" %}']];
+  var data = google.visualization.arrayToDataTable(
+      $.merge(form_header, pending_cases));
+  new google.visualization.Table(document.getElementById('pending_cases')).draw(data, null);
+
+  form_header = [['{% trans "Application Date" %}', '{% trans "Clearance Date" %}', '{% trans "Wait Days" %}', '{% trans "Consulate" %}', '{% trans "Major" %}']];
+  data = google.visualization.arrayToDataTable(
+      $.merge(form_header, cleared_cases));
+  new google.visualization.Table(document.getElementById('cleared_cases')).draw(data, null);
+
+  var raw_dist_header = [['{% trans "Application Date" %}', '{% trans "Days" %}']];
+  var raw_dist_options = {
+    title: '{% trans "Raw Data Distribution" %}',
+    legend: 'none',
+    vAxis: {
+      title: '{% trans "Days" %}',
+      minValue: 0,
+    },
+    hAxis: {
+      title: '{% trans "Days since 90 days ago" %}',
+      minValue: 0,
+    },
+    trendlines: {
+      0: {
+        opacity: 0.2,
+        lineWidth: 8,
+        color: 'blue',
+      },
+    },
+  }
+  data = google.visualization.arrayToDataTable(
+      $.merge(raw_dist_header, raw_data_dist));
+  new google.visualization.ScatterChart(document.getElementById('raw_dist')).draw(data, raw_dist_options);
+}
+
+</script>
+{% endblock %}
