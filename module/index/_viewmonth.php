@@ -74,14 +74,14 @@ $udb -> free_result();
         <?php
         for ( $step = 0; $step != count($all_data); $step ++ )
         {
-            echo "<tr><td><a href='index.php?do=casedetail&ac=update&id={$all_data[$step]["id"]}'>Update</a></td>"
+            echo "<tr><td><a href='index.php?do=case&ac=update&id={$all_data[$step]["id"]}'>Update</a></td>"
             . "<td>{$all_data[$step]["Checkee_CaseId"]}</td>"
             . "<td>{$enum_visatype[$all_data[$step]["VisaType"]]}</td>"
             . "<td>{$enum_consulate[$all_data[$step]["Consulate"]]}</td>"
             . "<td>{$all_data[$step]["Major_old"]}</td><td>{$enum_status[$all_data[$step]["ApplicationStatus"]]}</td>"
             . "<td>{$all_data[$step]["ApplicationDate"]}</td><td>{$all_data[$step]["ClearanceDate"]}</td>"
             . "<td>{$all_data[$step]["wait"]}</td>"
-            . "<td><a href='index.php?do=casedetail&ac=view&id={$all_data[$step]["id"]}'>Detail</a></td></tr>";
+            . "<td><a href='index.php?do=case&ac=view&id={$all_data[$step]["id"]}'>Detail</a></td></tr>";
         }
         ?>
     </table>

@@ -3,7 +3,7 @@
 include_once("./common.php");
 
 
-$dos = array("index", "addcase", "case_detail");
+$dos = array("index", "case");
 
 $do = @$_GET["do"];
 

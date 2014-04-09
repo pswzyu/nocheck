@@ -6,15 +6,14 @@ if (!defined("NOCHECK"))
 }
 // 建立一个传参的数组
 $menubar_para = array();
-// 如果当前登录ecms的用户id和设定中的管理员id相同， 则为管理员， 否则为用户
 $menubar_para["is_admin"] = FALSE;
 $menubar_para["now_on"] = "index";
 
 // browsing the whole data or browse by month
-$acs = array("viewall", "month", "type", "email");
+$acs = array("add", "update", "view");
 $ac = @$_GET["ac"];
 if(empty($ac) || !in_array($ac, $acs)) {
-	$ac = "viewall";
+	$ac = "view";
 }
 
 $pageno = @$_GET["pageno"];
@@ -22,29 +21,6 @@ if (empty($pageno)) {
     $page_now = 0;
 } else {
     $page_now = $pageno;
-}
-// if now we are in view all mode, we should get the page number
-if ($ac == "viewall")
-{
-    
-} else {
-    $month_get = @$_GET["month"];
-    $month = 0;
-    $year = 0;
-    if (!empty($month_get)) // month data can come from get
-    {
-        $tmpym = explode("-", $month_get);
-        $year = intval($tmpym[0]);
-        $month = intval($tmpym[1]);
-    } else { // can also from post
-        $month = @$_POST["month"];
-        $year = @$_POST["year"];
-        $month_get = "".$year."-".$month;
-    }
-    if (!$month || !$year)
-    {
-        die("Invalid year or month!");
-    }
 }
 
 ?>
@@ -59,6 +35,8 @@ if ($ac == "viewall")
 	<?php include(FROOT."module/_menubar/index.php");?>
 	<div id="right_div">
             <div id="right_tab">
+                
+                
                 <div id="tab_viewall" class="tab_title <?php if($ac=="viewall"){echo "tab_highlight";} ?>">
                     <a>View All Records</a>
                     <form action="index.php?do=index&ac=viewall" method="post">
@@ -90,7 +68,7 @@ if ($ac == "viewall")
                     </form>
                 </div>
                 <div id="tab_type" class="tab_title <?php if($ac=="type"){echo "tab_highlight";} ?>">
-                    <a>Recent Cases</a>
+                    <a>View by Case Status</a>
                     <form action="index.php?do=index&ac=type" method="post">
                         <div><select name="status">
                                 <option value="1">Clear</option>
