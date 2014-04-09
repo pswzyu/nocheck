@@ -1,0 +1,18 @@
+@CHARSET "UTF-8";
+
+#footer_div {
+	clear: both;
+	width: 100%;
+	padding-top: 5px;
+}
+
+.footer_spliter {
+	width: 100%;
+	height: 3px;
+	background-color: black;
+	
+}
+.center {
+	width: 20%;
+	margin: auto;
+}
