@@ -10,7 +10,7 @@ $config_api_url= "http://localhost/wiki/api.php";
 $config_super_code = "123123";
 $config_database_server = "localhost";
 $config_database_username = "root";
-$config_database_password = "";
+$config_database_password = "123qwe";
 
 // 分页条数
 $config_page_size = 50;

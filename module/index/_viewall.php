@@ -11,7 +11,7 @@ $pagesize = 5;
 
 $pageinfo = get_yearmonth_page_d("2012-08", date("Y-m"), $page_now, $pagesize);
 
-$table = [];
+$table = array();
 
 foreach ( $pageinfo["pagename_list"] as $key=>$value )
 {

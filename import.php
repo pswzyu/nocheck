@@ -21,14 +21,14 @@ $file = fopen('D:\workspace\nocheck\doc\checkcheck.csv','r');
 $data = fgetcsv($file);
 //Checkee_CaseId, VisaType, ApplicationDate, ClearanceDate, Consulate, Major, ApplicationStatus
 
-$consult = [ "", "BeiJing", "ChengDu", "Chennai", "Europe",
+$consult = array( "", "BeiJing", "ChengDu", "Chennai", "Europe",
         "GuangZhou", "HongKong", "Kolkata", "MexicoCity", "Montreal",
         "Mumbai", "NewDelhi", "Ottawa", "Quebec", "ShangHai", "ShenYang",
-        "Tijuana", "Toronto", "Vancouver", "Others" ];
+        "Tijuana", "Toronto", "Vancouver", "Others" );
 
-$visatype = [ "", "F1", "F2", "H1", "H4", "J1", "J2", "B1", "B2", "L1", "L2" ];
+$visatype = array( "", "F1", "F2", "H1", "H4", "J1", "J2", "B1", "B2", "L1", "L2" );
 
-$status_type = [ "", "Clear", "Pending", "Reject" ];
+$status_type = array( "", "Clear", "Pending", "Reject" );
 
 while ($data = fgetcsv($file)) {    //每次读取CSV里面的一行内容   
 	//print_r($data); //此为一个数组，要获得每一个数据，访问数组下标即可 

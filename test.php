@@ -69,7 +69,7 @@ US Consulate: <select name="city" >
 <option value="Others">Others</option>
 </select><br><br>
 
-Major: <input type="text" size="25" name="major" value="BME"/>
+Major: <input type="text" size="25" name="major" value="BME草拟吗"/>
 <br><br>
 
 Status: <select name="status">
@@ -89,7 +89,7 @@ Complete Date:(YYYY-MM-DD)
 <br><br>
 
 Note:<br>
-<textarea rows="10" cols="100" name="note">
+<textarea rows="10" cols="100" name="note">cc
 </textarea> <br><br>
 </td></tr>
 
@@ -129,12 +129,8 @@ Country: <input type="text" size="20" name="country" value="N/A"/><br>
 </form>
 ';
 
-
-
-preg_match('/name="casenum" value="(\d+)"/', $test, $matches);
-preg_match('/name="id" value="(\w+)"/', $test, $matches);
-preg_match('/name="email" value="([\w.\@]+)"/', $test, $matches);
-preg_match('/NAME="check_date" VALUE="([\w-]+)"/', $test, $matches);
+preg_match('/name="note">(\X+?)<\/textarea>/u', $test, $matches);
+$info["Note"] = $matches;
 
 /*
 Email:
@@ -156,6 +152,8 @@ Job Title;
 Years in Usa
 Country
 */
-print_r($matches);
+print_r($info);
 
 ?>
+ji0ng.bi0n@gmail.com
+jinglei.ren@gmail.com

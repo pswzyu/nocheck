@@ -29,7 +29,7 @@ function get_yearmonth_page_i($start, $end, $page_now, $page_size)
     $end_m = intval($end_m);
     $end_y = intval($end_y);
     
-    $result = array( "total_page"=>0, "pagename_list"=>[] );
+    $result = array( "total_page"=>0, "pagename_list"=>array() );
     
     $result["total_page"] = ceil((($end_y - $start_y)*12 + $end_m - $start_m + 1)
             / $page_size );
@@ -96,7 +96,7 @@ function get_yearmonth_page_d($start, $end, $page_now, $page_size)
     $end_m = intval($end_m);
     $end_y = intval($end_y);
     
-    $result = array( "total_page"=>0, "pagename_list"=>[] );
+    $result = array( "total_page"=>0, "pagename_list"=>array() );
     
     $result["total_page"] = ceil((($end_y - $start_y)*12 + $end_m - $start_m + 1)
             / $page_size );
