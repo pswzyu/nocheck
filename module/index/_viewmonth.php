@@ -19,8 +19,8 @@ $type_count = array_fill(0, count($enum_status), 0);
 $total_wait = 0;
 $udb->query($sql);
 
-$table = [];
-$all_data = [];
+$table = array();
+$all_data = array();
 $page_start = $pageno * $pagesize;
 $nof_record = 0;
 while ($one_data = $udb -> fetch_assoc())
@@ -49,8 +49,8 @@ for ($step = 0; $step != count($type_count); $step ++)
 // only consider the cleared people
 $avg_wait = round( $total_wait / ($type_count[1]==0?1:$type_count[1]) );
 // month, pending, clear, reject, total, avgwait
-$table = [ $type_count[1], $type_count[2], $type_count[3],
-    $total_people, $avg_wait ];
+$table = array( $type_count[1], $type_count[2], $type_count[3],
+    $total_people, $avg_wait );
 
 $udb -> free_result();
 

@@ -43,8 +43,8 @@ foreach ( $pageinfo["pagename_list"] as $key=>$value )
     // only consider the cleared people
     $avg_wait = round( $total_wait / ($type_count[1]==0?1:$type_count[1]) );
     // month, pending, clear, reject, total, avgwait
-    $table[] = [ $value, $type_count[1], $type_count[2], $type_count[3],
-        $total_people, $avg_wait ];
+    $table[] = array( $value, $type_count[1], $type_count[2], $type_count[3],
+        $total_people, $avg_wait );
     
     $udb -> free_result();
 }

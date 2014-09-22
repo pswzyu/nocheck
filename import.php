@@ -1,5 +1,10 @@
 <?php
 
+// this script is used to import data from http://checkcheck.info/
+// This script is not used now, since we have the sync.php which crawl the
+// pages on checkee.info and update the existing record in our database
+
+
 function saddslashes($string) {
 	if(is_array($string)) {
 		foreach($string as $key => $val) {
