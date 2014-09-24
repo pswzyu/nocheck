@@ -8,14 +8,15 @@
  *
  * Main module of the application.
  */
-angular
+var issuemyvisaApp = angular
   .module('issuemyvisaApp', [
     'ngAnimate',
     'ngCookies',
     'ngResource',
     'ngRoute',
     'ngSanitize',
-    'ngTouch'
+    'ngTouch',
+    'ngGrid'
   ])
   .config(function ($routeProvider) {
     $routeProvider
@@ -31,3 +32,10 @@ angular
         redirectTo: '/'
       });
   });
+
+issuemyvisaApp.factory('appConfig', function(){
+
+    return {
+       apiRootUrl: 'http://issuemyvisa.today/api/v1'
+    };
+});

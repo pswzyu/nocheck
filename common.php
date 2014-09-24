@@ -13,12 +13,11 @@ include_once(FROOT."config/lang.php");
 //$ecms_userid = $cfg_ml->M_ID;
 //echo "--".$ecms_userid;
 
-// 获取数据库连接
-$udb = new UDB(); // 创建数据库工具类对象
-// 连接数据库
-$udb -> connect($config_database_server, $config_database_username, $config_database_password);	
-$udb -> query("USE `nocheck`"); // 切换到chisha数据库
-$udb -> query("SET NAMES UTF8"); // 设定传输编码
+
+$udb = new UDB();
+$udb -> connect($config_database_server, $config_database_username, $config_database_password);
+$udb -> query("USE `nocheck`");
+$udb -> query("SET NAMES UTF8");
 
 
 $magic_quote = get_magic_quotes_gpc();

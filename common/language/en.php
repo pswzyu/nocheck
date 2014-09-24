@@ -7,9 +7,7 @@
  */
 
 $lang = array(
-    "view_all_record" => "View All Records",
-    ""
-    
+    "view_all_record" => "View All Records"
 );
 
 ?>
