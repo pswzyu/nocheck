@@ -36,6 +36,6 @@ var issuemyvisaApp = angular
 issuemyvisaApp.factory('appConfig', function(){
 
     return {
-       apiRootUrl: 'http://localhost:8888/api/v1'
+       apiRootUrl: 'http://issuemyvisa.today/api/v1'
     };
 });
