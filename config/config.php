@@ -8,9 +8,9 @@ $config_api_url= "http://localhost/wiki/api.php";
 
 // 超级密码 可以跳过借书本书和超期限制
 $config_super_code = "123123";
-$config_database_server = "issuemyvisa.chqisrnskoqf.us-west-2.rds.amazonaws.com";
-$config_database_username = "issuemyvisa";
-$config_database_password = "issuemyvisa00";
+$config_database_server = "";
+$config_database_username = "";
+$config_database_password = "";
 
 
 // 分页条数
