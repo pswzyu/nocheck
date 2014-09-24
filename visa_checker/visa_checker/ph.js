@@ -9,7 +9,11 @@ if (args.length == 2)
 	phantom.exit();
 }
 var page = require('webpage').create();
+page.settings.userAgent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1500.71 Safari/537.36';
+//
 page.open("https://ceac.state.gov/CEACStatTracker/Status.aspx?App=NIV", function (status){
+	//page.render('new.png');
+	//console.log(status);
 	var data = page.evaluate("function () {\
 		document.querySelector('input#ctl00_ContentPlaceHolder1_txbCase').setAttribute('value', '"+case_id+"');\
 		document.querySelector('input#ctl00_ContentPlaceHolder1_btnSubmit').click();}");
@@ -28,7 +32,7 @@ page.open("https://ceac.state.gov/CEACStatTracker/Status.aspx?App=NIV", function
 				return document.querySelector("div.status-content table");
 			});
 			visa_detail = visa_detail.innerHTML;
-			console.log(visa_status+"*#*"+visa_detail);
+			console.log(visa_detail);
 			phantom.exit();
 		}
 	}

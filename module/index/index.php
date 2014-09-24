@@ -1,9 +1,7 @@
 <?php 
 
-if (!defined("NOCHECK"))
-{
-    die("Internal Error!");
-}
+protect();
+
 // 建立一个传参的数组
 $menubar_para = array();
 // 如果当前登录ecms的用户id和设定中的管理员id相同， 则为管理员， 否则为用户
@@ -27,7 +25,7 @@ if (empty($pageno)) {
 if ($ac == "viewall")
 {
     
-} else {
+} elseif ($ac == "month") {
     $month_get = @$_GET["month"];
     $month = 0;
     $year = 0;
@@ -45,6 +43,8 @@ if ($ac == "viewall")
     {
         die("Invalid year or month!");
     }
+} elseif ($ac == "type") {
+    
 }
 
 ?>
@@ -117,8 +117,10 @@ if ($ac == "viewall")
                     include_once(FROOT."common/utils/yearmonth.php");
                     include_once(FROOT."module/index/_viewall.php");
                     
-                } else { // layout for others
+                } elseif ($ac == "month") { // layout for others
                     include_once(FROOT."module/index/_viewmonth.php");
+                } elseif ($ac == "type") {
+                    include_once(FROOT."module/index/_viewtype.php");
                 }
                 ?>
             </div>

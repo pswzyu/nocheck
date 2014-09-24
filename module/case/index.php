@@ -1,9 +1,7 @@
 <?php 
 
-if (!defined("NOCHECK"))
-{
-    die("Internal Error!");
-}
+protect();
+
 // 建立一个传参的数组
 $menubar_para = array();
 $menubar_para["is_admin"] = FALSE;
