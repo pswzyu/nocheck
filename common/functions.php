@@ -1,5 +1,4 @@
 <?php
-
 function saddslashes($string) {
 	if(is_array($string)) {
 		foreach($string as $key => $val) {
@@ -49,7 +48,6 @@ function getonlineip($format=0) {
 		return $_SGLOBAL['onlineip'];
 	}
 }
-
 function protect()
 {
 	if (!defined("NOCHECK"))
