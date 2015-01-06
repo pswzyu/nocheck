@@ -7,6 +7,7 @@ include_once(FROOT."common/functions.php");
 include_once(FROOT."common/types.php");
 include_once(FROOT."lib/db/mysql.inc.php");
 include_once(FROOT."config/config.php");
+@include_once(FROOT."config/config.private.php");
 include_once(FROOT."config/lang.php");
 //include_once(FROOT."../member/config.php");
 

@@ -9,7 +9,7 @@
         <?php
             if (!$menubar_para["is_admin"])
             { echo '<li><a href="index.php">Homepage</a></li>
-                    <li><a href="index.php?do=casedetail&ac=add">Add Your Case</a></li>';
+                    <li><a href="index.php?do=case&ac=add">Add Your Case</a></li>';
             }
         ?>
     </ul>

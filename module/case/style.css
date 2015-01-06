@@ -4,7 +4,7 @@
 #right_tab .tab_title {
     border: solid 1px yellow;
     float: left;
-    width: 24%;
+    width: 33%;
     height: 100px;
 }
 .tab_highlight {

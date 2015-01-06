@@ -9,6 +9,8 @@ require_once 'api.abs.class.php';
 include_once(FROOT."classes/ViewStatistics.class.php");
 include_once(FROOT."common/utils/yearmonth.php");
 
+include_once(FROOT."classes/CaseOperation.class.php");
+
 class MyAPI extends API
 {
     //protected $User;
@@ -58,6 +60,18 @@ class MyAPI extends API
     
     public function cases()
     {
+        if ($this->verb == "add")
+        {
+            $case_operator = new CaseOperation($this->udb);
+            $caseid = $case_operator->addCase($_POST);
+            if ($caseid == -1)
+            {
+                return array("id"=>"-1", "error"=>$case_operator->getErrorMessage());
+            }else
+            {
+                return array("id"=>$caseid);
+            }
+        }
         return array("args"=>$this->args, "verbs"=>$this->verb);
     }
     public function view()
