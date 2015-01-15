@@ -27,15 +27,16 @@ $start_m = intval("08");
 $end_y = intval(date("Y"));
 $end_m = intval(date("m"));
 
+
 if (0)
 {
-
+    
 /*
  * first get the info from check.info
  */
 while (true)
 {
-    echo "".$end_y."-".$end_m."<br/>";
+    echo "".$end_y."-".$end_m."\n";
     $s_end_m = $end_m < 10? "0$end_m":"$end_m";
     $page_content = file_get_contents("http://www.checkee.info/main.php?dispdate={$end_y}-{$s_end_m}");
     if (!$page_content)
@@ -47,55 +48,193 @@ while (true)
         
         $address = explode("=", $value);
         $casenum = $address[1]; // we need the number behind =
-        echo "casenum={$casenum}\n";
+        
+        $no_error = TRUE;
+        $error_msg = "Error:{$casenum}:";
+        
         $test = file_get_contents("http://www.checkee.info/update.php?casenum={$casenum}");
         
         $info = array();
+        ////////////////////////
         preg_match('/name="casenum" value="(\d+)"\//', $test, $matches);
-        $info["Checkee_CaseId"] = $matches[1];
+        if(isset($matches[1])){
+            $info["Checkee_CaseId"] = $matches[1];
+        }else{
+            $info["Checkee_CaseId"] = "";
+            $no_error = FALSE;
+            $error_msg .= "Checkee_CaseId,";
+        }
+        ////////////////////////
         preg_match('/name="id" value="(\X+?)"\//', $test, $matches);
-        $info["Nickname"] = $matches[1];
+        if(isset($matches[1])){
+            $info["Nickname"] = $matches[1];
+        }else{
+            $info["Nickname"] = "";
+            $no_error = FALSE;
+            $error_msg .= "Nickname,";
+        }
+        ////////////////////////
         preg_match('/name="email" value="([\w.\@ -]*?)"\//', $test, $matches);
-        $info["Email"] = $matches[1];
+        if(isset($matches[1])){
+            $info["Email"] = $matches[1];
+        }else{
+            $info["Email"] = "";
+            $no_error = FALSE;
+            $error_msg .= "Email,";
+        }
+        ///////////////////////
         preg_match('/NAME="check_date" VALUE="([\w-]+)"/', $test, $matches);
-        $info["ApplicationDate"] = $matches[1];
+        if(isset($matches[1])){
+            $info["ApplicationDate"] = $matches[1];
+        }else{
+            $info["ApplicationDate"] = "";
+            $no_error = FALSE;
+            $error_msg .= "ApplicationDate,";
+        }
+        //////////////////////
         // type entry consulate status
-        preg_match_all('/option value="([\w.\\/]*?)" SELECTED/', $test, $matches);
-        $info["VisaType"] = $matches[1][0];
-        $info["VisaEntry"] = $matches[1][1];
-        $info["Consulate"] = $matches[1][2];
-        $info["ApplicationStatus"] = $matches[1][3];
-        $info["Degree"] = $matches[1][4];
+        preg_match_all('/option value="([\w.\/ ]*?)" SELECTED/', $test, $matches);
+        if(isset($matches[1][1])){
+            $info["VisaType"] = $matches[1][1];
+        }else{
+            $info["VisaType"] = "";
+            $no_error = FALSE;
+            $error_msg .= "VisaType,";
+        }
+        if(isset($matches[1][2])){
+            $info["VisaEntry"] = $matches[1][2];
+        }else{
+            $info["VisaEntry"] = "";
+            $no_error = FALSE;
+            $error_msg .= "VisaEntry,";
+        }
+        if(isset($matches[1][3])){
+            $info["Consulate"] = $matches[1][3];
+        }else{
+            $info["Consulate"] = "";
+            $no_error = FALSE;
+            $error_msg .= "Consulate,";
+        }
+        if(isset($matches[1][4])){
+            $info["ApplicationStatus"] = $matches[1][4];
+        }else{
+            $info["ApplicationStatus"] = "";
+            $no_error = FALSE;
+            $error_msg .= "ApplicationStatus,";
+        }
+        if(isset($matches[1][5])){
+            $info["Degree"] = $matches[1][5];
+        }else{
+            $info["Degree"] = "";
+            $no_error = FALSE;
+            $error_msg .= "Degree,";
+        }
+        //////////////////////
         preg_match('/name="major" value="(\X*?)"\//', $test, $matches);
-        $info["Major"] = $matches[1];
+        if(isset($matches[1])){
+            $info["Major"] = $matches[1];
+        }else{
+            $info["Major"] = "";
+            $no_error = FALSE;
+            $error_msg .= "Major,";
+        }
+        //////////////////////
         preg_match('/NAME="clear_date" VALUE="([\w-]+)"/', $test, $matches);
-        $info["ClearanceDate"] = $matches[1];
+        if(isset($matches[1])){
+            $info["ClearanceDate"] = $matches[1];
+        }else{
+            $info["ClearanceDate"] = "";
+            $no_error = FALSE;
+            $error_msg .= "ClearanceDate,";
+        }
+        ///////////////////////
         preg_match('/name="note">(\X*?)<\/textarea>/', $test, $matches);
-        $info["Note"] = $matches[1];
+        if(isset($matches[1])){
+            $info["Note"] = $matches[1];
+        }else{
+            $info["Note"] = "";
+            $no_error = FALSE;
+            $error_msg .= "Note,";
+        }
+        ///////////////////////
         preg_match('/name="lastname" value="(\X+?)"\//', $test, $matches);
-        $info["LastName"] = $matches[1];
+        if(isset($matches[1])){
+            $info["LastName"] = $matches[1];
+        }else{
+            $info["LastName"] = "";
+            $no_error = FALSE;
+            $error_msg .= "LastName,";
+        }
+        ///////////////////////
         preg_match('/name="firstname" value="(\X+?)"\//', $test, $matches);
-        $info["FirstName"] = $matches[1];
+        if(isset($matches[1])){
+            $info["FirstName"] = $matches[1];
+        }else{
+            $info["FirstName"] = "";
+            $no_error = FALSE;
+            $error_msg .= "FirstName,";
+        }
+        /////////////////////////
         preg_match('/name="univ_college" value="(\X+?)"\//', $test, $matches);
-        $info["University"] = $matches[1];
+        if(isset($matches[1])){
+            $info["University"] = $matches[1];
+        }else{
+            $info["University"] = "";
+            $no_error = FALSE;
+            $error_msg .= "University,";
+        }
+        //////////////////////////
         preg_match('/name="employer" value="(\X+?)"\//', $test, $matches);
-        $info["Employer"] = $matches[1];
+        if(isset($matches[1])){
+            $info["Employer"] = $matches[1];
+        }else{
+            $info["Employer"] = "";
+            $no_error = FALSE;
+            $error_msg .= "Employer,";
+        }
+        //////////////////////////
         preg_match('/name="job_title" value="(\X+?)"\//', $test, $matches);
-        $info["JobTitle"] = $matches[1];
+        if(isset($matches[1])){
+            $info["JobTitle"] = $matches[1];
+        }else{
+            $info["JobTitle"] = "";
+            $no_error = FALSE;
+            $error_msg .= "JobTitle,";
+        }
+        //////////////////////////
         preg_match('/name="years_in_usa" value="(\X+?)"\//', $test, $matches);
-        $info["YearsInUSA"] = $matches[1];
+        if(isset($matches[1])){
+            $info["YearsInUSA"] = $matches[1];
+        }else{
+            $info["YearsInUSA"] = "";
+            $no_error = FALSE;
+            $error_msg .= "YearsInUSA,";
+        }
+        //////////////////////////
         preg_match('/name="country" value="(\X+?)"\//', $test, $matches);
-        $info["Citizenship"] = $matches[1];
+        if(isset($matches[1])){
+            $info["Citizenship"] = $matches[1];
+        }else{
+            $info["Citizenship"] = "";
+            $no_error = FALSE;
+            $error_msg .= "Citizenship,";
+        }
+        ///////////////////////
         
         $info = saddslashes($info);
         
+        if (!$no_error)
+        {
+            echo $error_msg."\n";
+        }
+        
         // first check if this case is already in the databse
-        $udb->query("SELECT * FROM `nocheck_cases` WHERE `Checkee_CaseId`={$info["Checkee_CaseId"]}");
+        $query_handle = $udb->query("SELECT * FROM `nocheck_cases` WHERE `Checkee_CaseId`={$info["Checkee_CaseId"]}");
         if ($udb->get_error_no()){
             die("Error:{$info["Checkee_CaseId"]}");
         }
         // if this record is already in the database
-        if ($udb->fetch_assoc()){
+        if ($udb->fetch_assoc($query_handle)){
             // update the record in the database
             $sql = "UPDATE `nocheck_cases` SET
                     `Nickname`='{$info["Nickname"]}',
@@ -104,7 +243,7 @@ while (true)
                     `ClearanceDate`='{$info["ClearanceDate"]}',
                     `VisaType`='".array_search($info["VisaType"], $enum_visatype)."',
                     `VisaEntry`='".array_search($info["VisaEntry"], $enum_visaentry)."',
-                    `Consulate`='".array_search($info["Consulate"], $enum_consulate)."',
+                    `Consulate`='".array_search(trim($info["Consulate"]), $enum_consulate)."',
                     `Major_old`='{$info["Major"]}',
                     `ApplicationStatus`='".array_search($info["ApplicationStatus"], $enum_status)."',
                     `Note`='{$info["Note"]}',
@@ -171,8 +310,8 @@ while (true)
 if (1){
 
 
-include_once __DIR__.'./classes/CaseOperation.class.php';
-include __DIR__."./lib/php/PHPMailer-master/PHPMailerAutoload.php";
+include_once __DIR__.DIRECTORY_SEPARATOR.'./classes/CaseOperation.class.php';
+include __DIR__.DIRECTORY_SEPARATOR."./lib/php/PHPMailer/PHPMailerAutoload.php";
 
 $sql = "SELECT * FROM `nocheck_cases` WHERE `ApplicationStatus`=2 AND (`DOS_CaseId` IS NOT NULL)";
 $query_handle = $udb->query($sql);
@@ -188,7 +327,6 @@ $mail->Password = $config_email_password;
 $mail->FromName = $config_email_fromname; // readable name
 
 $mail->Subject = $config_email_subject;
-$mail->Body    = $config_email_body;
 //-----------------------------------------------------------------------
 
 $mail->Host = "ssl://smtp.gmail.com"; // GMail
@@ -211,10 +349,13 @@ while ($open_case = $udb -> fetch_assoc($query_handle))
     }elseif($result_parts[0] == "success"){
         // only email the user when status changes
         $new_status = $co->convertStatusNameToCode($result_parts[1]);
-        $case_start_date = $udb->timestamp_php_to_db($result_parts[2], "d-M-Y");
-        $case_end_date = $udb->timestamp_php_to_db($result_parts[3], "d-M-Y");
+        $case_start_date = date_format(date_create_from_format("d-M-Y", $result_parts[2]), "Y-m-d");
+        $case_end_date = date_format(date_create_from_format("d-M-Y", $result_parts[3]), "Y-m-d");
         if ($new_status != intval($open_case["ApplicationStatus"]))
         {
+            echo "Email to: {$open_case["Email"]}, {$open_case["DOS_CaseId"]}"
+                . " from ".Enums::$enum_status[intval($open_case["ApplicationStatus"])]." to "
+                .Enums::$enum_status[$new_status].".\n";
             // need to update the database first
             $sql = "UPDATE `nocheck_cases` SET
                     `ApplicationStatus`='{$new_status}',
@@ -227,6 +368,8 @@ while ($open_case = $udb -> fetch_assoc($query_handle))
             // and then notify the user using email
             $mail->ClearAddresses();
             $mail->AddAddress($open_case["Email"]); // recipients email
+            $mail->Body    = sprintf($config_email_body, Enums::$enum_status[intval($open_case["ApplicationStatus"])],
+                    Enums::$enum_status[$new_status]);
 
             if(!$mail->Send())
                 echo "Mailer Error: " . $mail->ErrorInfo;

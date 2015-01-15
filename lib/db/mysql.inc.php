@@ -87,9 +87,9 @@ class UDB
 	 * @param string $mysql_timestamp
 	 * @return int 整形的php时间戳
 	 */
-	static function timestamp_php_to_db($php_timestamp, $format="Y-m-d H:i:s")
+	static function timestamp_php_to_db($php_timestamp)
 	{
-		return date($format, $php_timestamp);
+		return date("Y-m-d H:i:s", $php_timestamp);
 	}
 }
 

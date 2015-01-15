@@ -1,0 +1,6 @@
+[submodule "lib/php/Validation"]
+	path = lib/php/Validation
+	url = https://github.com/Respect/Validation.git
+[submodule "lib/php/PHPMailer"]
+	path = lib/php/PHPMailer
+	url = https://github.com/PHPMailer/PHPMailer.git

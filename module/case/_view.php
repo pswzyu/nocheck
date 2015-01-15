@@ -6,12 +6,14 @@
  * and open the template in the editor.
  */
 
-protect();
+require(__DIR__.DIRECTORY_SEPARATOR."../../common/protect.php");
 
 // get the case information by caseid and then display it
-$udb->query("SELECT * FROM `nocheck_cases` WHERE id=".$caseid);
+$query_handle = $udb->query("SELECT * FROM `nocheck_cases` WHERE id=".$caseid);
 
-$table = $udb->fetch_assoc();
+$table = $udb->fetch_assoc($query_handle);
+
+$udb->free_result($query_handle);
 
 $VisaType = Enums::$enum_visatype[$table["VisaType"]];
 $VisaEntry = Enums::$enum_visaentry[$table["VisaEntry"]];

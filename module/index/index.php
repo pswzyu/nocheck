@@ -1,6 +1,6 @@
 <?php 
 
-protect();
+require(__DIR__.DIRECTORY_SEPARATOR."../../common/protect.php");
 
 // 建立一个传参的数组
 $menubar_para = array();
@@ -10,41 +10,59 @@ $menubar_para["now_on"] = "index";
 
 // browsing the whole data or browse by month
 $acs = array("viewall", "month", "type", "email");
-$ac = @$_GET["ac"];
+$ac = _SAFEGET("ac");
 if(empty($ac) || !in_array($ac, $acs)) {
 	$ac = "viewall";
 }
 
-$pageno = @$_GET["pageno"];
+// if the page contain more than one page, we should get the page number
+$pageno = _SAFEGET("pageno");
 if (empty($pageno)) {
     $page_now = 0;
 } else {
     $page_now = $pageno;
 }
-// if now we are in view all mode, we should get the page number
+
+// for different view modes, get the parameters that used in different modes
 if ($ac == "viewall")
 {
     
 } elseif ($ac == "month") {
-    $month_get = @$_GET["month"];
-    $month = 0;
-    $year = 0;
-    if (!empty($month_get)) // month data can come from get
-    {
-        $tmpym = explode("-", $month_get);
-        $year = intval($tmpym[0]);
-        $month = intval($tmpym[1]);
-    } else { // can also from post
-        $month = @$_POST["month"];
-        $year = @$_POST["year"];
-        $month_get = "".$year."-".$month;
+    // default value of year month is current year and month
+    if (isset($_GET["month"]) && is_numeric($_GET["month"])){
+        $month = intval($_GET["month"]);
+    }else{
+        $month = intval(date("m"));
     }
-    if (!$month || !$year)
-    {
-        die("Invalid year or month!");
+    
+    if (isset($_GET["year"]) && is_numeric($_GET["year"])){
+        $year = intval($_GET["year"]);
+    }else{
+        $year = intval(date("Y"));
     }
 } elseif ($ac == "type") {
+    // for this view mode, get the type and the recent days uploaded by user
+    // the status code is according to the types.php
+    if (isset($_GET["status"]) && is_numeric($_GET["status"])){
+        $pg_status = intval($_GET["status"]);
+    }else{
+        $pg_status = 1;
+    }
     
+    if (isset($_GET["how_recent"]) && is_numeric($_GET["how_recent"])){
+        $pg_recent = intval($_GET["how_recent"]);
+    }else{
+        $pg_recent = 1;
+    }
+
+}elseif ($ac == "email") // search by email mode
+{
+    // need to extract the email address used typed in
+    if (isset($_GET["email"]) ){
+        $pg_email = $_GET["email"];
+    }else{
+        $pg_email = "";
+    }
 }
 
 ?>
@@ -61,18 +79,20 @@ if ($ac == "viewall")
             <div id="right_tab">
                 <div id="tab_viewall" class="tab_title <?php if($ac=="viewall"){echo "tab_highlight";} ?>">
                     <a>View All Records</a>
-                    <form action="index.php?do=index&ac=viewall" method="post">
+                    <form action="index.php?do=index&ac=viewall" method="get">
                         <div><input type="submit" name="submit_month" value="Go" /></div>
                     </form>
                 </div>
                 <div id="tab_month" class="tab_title <?php if($ac=="month"){echo "tab_highlight";} ?>">
                     <a>View by Month</a>
-                    <form action="index.php?do=index&ac=month" method="post">
+                    <form action="index.php" method="get">
+                        <input type="hidden" name="do" value="index"/>
+                        <input type="hidden" name="ac" value="month"/>
                         <div><select name="year">
                             <?php
                             for ($step = intval(date("Y")); $step != 2012 -1; $step --)
                             {
-                                $sel = $year==$step?"selected='selected'":"";
+                                $sel = isset($year)&&$year==$step?"selected='selected'":"";
                                 echo "<option $sel value='{$step}'>{$step}</option>";
                             }
                             ?>
@@ -81,7 +101,7 @@ if ($ac == "viewall")
                             <?php
                             for ($step = 1; $step != 13; $step ++)
                             {
-                                $sel = $month==$step?"selected='selected'":"";
+                                $sel = isset($month)&&$month==$step?"selected='selected'":"";
                                 echo "<option $sel value='{$step}'>{$step}</option>";
                             }
                             ?>
@@ -91,19 +111,33 @@ if ($ac == "viewall")
                 </div>
                 <div id="tab_type" class="tab_title <?php if($ac=="type"){echo "tab_highlight";} ?>">
                     <a>Recent Cases</a>
-                    <form action="index.php?do=index&ac=type" method="post">
+                    <form action="index.php" method="get">
+                        <input type="hidden" name="do" value="index"/>
+                        <input type="hidden" name="ac" value="type"/>
                         <div><select name="status">
-                                <option value="1">Clear</option>
-                                <option value="2">Pending</option>
-                                <option value="3">Reject</option>
-                        </select></div>
+                                <option <?php if(isset($pg_status)&&$pg_status==1){ echo "selected='selected'";}?> value="1">Clear</option>
+                                <!---<option value="2">Pending</option>--->
+                                <option <?php if(isset($pg_status)&&$pg_status==3){ echo "selected='selected'";}?> value="3">Reject</option>
+                            </select>
+                            <a>Cases</a><br/>
+                            <a>in Last</a>
+                            <select name="how_recent">
+                                <option <?php if(isset($pg_recent)&&$pg_recent==1){ echo "selected='selected'";}?> value="1">7</option>
+                                <option <?php if(isset($pg_recent)&&$pg_recent==2){ echo "selected='selected'";}?> value="2">15</option>
+                                <option <?php if(isset($pg_recent)&&$pg_recent==3){ echo "selected='selected'";}?> value="3">30</option>
+                                <option <?php if(isset($pg_recent)&&$pg_recent==4){ echo "selected='selected'";}?> value="4">90</option>
+                            </select>
+                            <a>Days</a>
+                        </div>
                         <div><input type="submit" name="submit_type" value="Go" /></div>
                     </form>
                 </div>
                 <div id="tab_email" class="tab_title <?php if($ac=="email"){echo "tab_highlight";} ?>">
                     <a>Search by Email</a>
-                    <form action="index.php?do=index&ac=email" method="post">
-                        <div><input type="text" name="email"  /></div>
+                    <form action="index.php" method="get">
+                        <input type="hidden" name="do" value="index"/>
+                        <input type="hidden" name="ac" value="email"/>
+                        <div><input type="text" name="email" <?php if(isset($pg_email)){ echo "value='{$pg_email}'"; } ?> /></div>
                         <div><input type="submit" name="submit_type" value="Go" /></div>
                     </form>
                 </div>
@@ -114,13 +148,15 @@ if ($ac == "viewall")
                 // contain some statistical data
                 if ($ac == "viewall")
                 {
-                    include_once(FROOT."common/utils/yearmonth.php");
-                    include_once(FROOT."module/index/_viewall.php");
+                    include(FROOT."common/utils/yearmonth.php");
+                    include(FROOT."module/index/_viewall.php");
                     
                 } elseif ($ac == "month") { // layout for others
-                    include_once(FROOT."module/index/_viewmonth.php");
+                    include(FROOT."module/index/_viewmonth.php");
                 } elseif ($ac == "type") {
-                    include_once(FROOT."module/index/_viewtype.php");
+                    include(FROOT."module/index/_viewtype.php");
+                } elseif ($ac == "email") {
+                    include(FROOT."module/index/_viewemail.php");
                 }
                 ?>
             </div>

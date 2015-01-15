@@ -33,3 +33,7 @@ td,th{
 .page_highlight {
     background-color: #70A070;
 }
+
+.form_req {
+    color: red;
+}

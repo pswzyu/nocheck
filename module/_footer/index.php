@@ -1,4 +1,6 @@
 <?php
+require(__DIR__.DIRECTORY_SEPARATOR."../../common/protect.php");
+
 
 echo '<link rel="stylesheet" type="text/css" href="module/_footer/style.css" />';
 

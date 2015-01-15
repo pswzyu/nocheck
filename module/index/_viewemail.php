@@ -9,28 +9,11 @@ require(__DIR__.DIRECTORY_SEPARATOR."../../common/protect.php");
 
 $pagesize = 10;
 
-// convert the selection to actual numbers used in sql query
-if ($pg_status == 1){ // clear
-    $case_status = 1;
-}elseif ($pg_status == 3){ // reject
-    $case_status = 3;
-}
-// the days range
-if ($pg_recent == 1){
-    $days_recent = 7;
-}elseif ($pg_recent == 2){
-    $days_recent = 15;
-}elseif ($pg_recent == 3){
-    $days_recent = 30;
-}elseif ($pg_recent == 4){
-    $days_recent = 90;
-}
 
 $sql = "SELECT *,DATEDIFF(`ClearanceDate`,`ApplicationDate`) AS `wait`
             FROM `nocheck_cases`
-            WHERE `ApplicationStatus` = '{$case_status}' 
-            AND (`ClearanceDate` BETWEEN NOW() - INTERVAL {$days_recent} DAY AND NOW() )
-            ORDER BY `ClearanceDate` DESC ";
+            WHERE `Email` LIKE '%{$pg_email}%' ";
+echo $sql;
 
 $type_count = array_fill(0, count($enum_status), 0);
 $total_wait = 0;
@@ -109,8 +92,7 @@ $udb -> free_result($query_handle);
     {
         $page = $step + 1;
         $highlight = $step==$pageno?"class='page_highlight'":"";
-        echo "<div><a {$highlight} href='index.php?do=index&ac=type&"
-            . "status={$pg_status}&how_recent={$pg_recent}&pageno={$step}'>{$page}</a></div>";
+        echo "<div><a {$highlight} href='index.php?do=index&ac=email&email={$pg_email}'>{$page}</a></div>";
         
     }
     ?>

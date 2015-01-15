@@ -5,7 +5,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-protect();
+require(__DIR__.DIRECTORY_SEPARATOR."../../common/protect.php");
 
 $pagesize = 10;
 
@@ -13,17 +13,18 @@ $pagesize = 10;
 $sql = "SELECT *,DATEDIFF(`ClearanceDate`,`ApplicationDate`) AS `wait`
             FROM `nocheck_cases`
             WHERE YEAR(`ApplicationDate`) = '{$year}' 
-            AND MONTH(`ApplicationDate`) = '{$month}' ";
+            AND MONTH(`ApplicationDate`) = '{$month}'
+            ORDER BY `ApplicationDate` DESC";
 
 $type_count = array_fill(0, count($enum_status), 0);
 $total_wait = 0;
-$udb->query($sql);
+$query_handle = $udb->query($sql);
 
 $table = array();
 $all_data = array();
 $page_start = $pageno * $pagesize;
 $nof_record = 0;
-while ($one_data = $udb -> fetch_assoc())
+while ($one_data = $udb -> fetch_assoc($query_handle))
 {
     $nof_record ++;
     if ($nof_record > $page_start && $nof_record <= $page_start+$pagesize)
@@ -52,7 +53,7 @@ $avg_wait = round( $total_wait / ($type_count[1]==0?1:$type_count[1]) );
 $table = array( $type_count[1], $type_count[2], $type_count[3],
     $total_people, $avg_wait );
 
-$udb -> free_result();
+$udb -> free_result($query_handle);
 
 ?>
 
@@ -75,7 +76,7 @@ $udb -> free_result();
         for ( $step = 0; $step != count($all_data); $step ++ )
         {
             echo "<tr><td><a href='index.php?do=case&ac=update&id={$all_data[$step]["id"]}'>Update</a></td>"
-            . "<td>{$all_data[$step]["Checkee_CaseId"]}</td>"
+            . "<td>{$all_data[$step]["Nickname"]}</td>"
             . "<td>{$enum_visatype[$all_data[$step]["VisaType"]]}</td>"
             . "<td>{$enum_consulate[$all_data[$step]["Consulate"]]}</td>"
             . "<td>{$all_data[$step]["Major_old"]}</td><td>{$enum_status[$all_data[$step]["ApplicationStatus"]]}</td>"
@@ -93,7 +94,7 @@ $udb -> free_result();
         $page = $step + 1;
         $highlight = $step==$pageno?"class='page_highlight'":"";
         echo "<div><a {$highlight} href='index.php?do=index&ac=month&"
-            . "month={$month_get}&pageno={$step}'>{$page}</a></div>";
+            . "month={$month}&year={$year}&pageno={$step}'>{$page}</a></div>";
         
     }
     ?>

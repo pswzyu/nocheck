@@ -5,7 +5,7 @@ include_once("./common.php");
 
 $dos = array("index", "case");
 
-$do = @$_GET["do"];
+$do = _SAFEGET("do");
 
 //echo $do;
 

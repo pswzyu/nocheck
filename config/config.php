@@ -1,5 +1,7 @@
 <?php 
 
+$config_server_timezone = "";
+
 $config_database_server = "";
 $config_database_username = "";
 $config_database_password = "";

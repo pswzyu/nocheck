@@ -5,7 +5,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-protect();
+require(__DIR__.DIRECTORY_SEPARATOR."../../common/protect.php");
 
 $pagesize = 5;
 
@@ -27,8 +27,9 @@ $table = $vs->viewAll($pageinfo["pagename_list"]);
         <?php
         for ($step = 0; $step != count($table); $step++)
         {
+            $year_month = explode("-",$table[$step]["yearmonth"]);
             echo "<tr>
-                <td><a href='index.php?do=index&ac=month&month={$table[$step]["yearmonth"]}'>Track</a></td>
+                <td><a href='index.php?do=index&ac=month&year={$year_month[0]}&month={$year_month[1]}'>Track</a></td>
                 <td>{$table[$step]["yearmonth"]}</td><td>{$table[$step]["clear"]}</td>
                 <td>{$table[$step]["pending"]}</td><td>{$table[$step]["rejected"]}</td>
                 <td>{$table[$step]["total"]}</td><td>{$table[$step]["avg_wait"]}</td>

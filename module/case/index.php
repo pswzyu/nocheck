@@ -1,6 +1,6 @@
 <?php 
 
-protect();
+require(__DIR__.DIRECTORY_SEPARATOR."../../common/protect.php");
 
 // 建立一个传参的数组
 $menubar_para = array();
@@ -9,18 +9,35 @@ $menubar_para["now_on"] = "index";
 
 // browsing the whole data or browse by month
 $acs = array("add", "update", "view");
-$ac = @$_GET["ac"];
+$ac = _SAFEGET("ac");
 if(empty($ac) || !in_array($ac, $acs)) {
 	$ac = "view";
 }
 
-$pageno = @$_GET["pageno"];
+$pageno = _SAFEGET("pageno");
 if (empty($pageno)) {
     $page_now = 0;
 } else {
     $page_now = $pageno;
 }
-$caseid = @$_GET["id"]; // caseid
+
+if ($ac == "add"){
+    
+}elseif ($ac == "update"){
+    if (isset($_GET["id"]) && is_numeric($_GET["id"])){
+        $caseid = intval($_GET["id"]);
+    }else{
+        die("Invalid case id");
+    }
+}elseif ($ac == "view"){
+    if (isset($_GET["id"]) && is_numeric($_GET["id"])){
+        $caseid = intval($_GET["id"]);
+    }else{
+        die("Invalid case id");
+    }
+}
+
+
 
 ?>
 <html>
@@ -36,6 +53,7 @@ $caseid = @$_GET["id"]; // caseid
         jQuery(document).ready(function(){
             // initialize the date picker
             jQuery("#dp_applydate").datepick({dateFormat: 'yyyy-mm-dd'});
+            jQuery("#dp_cleardate").datepick({dateFormat: 'yyyy-mm-dd'});
             // restore the last state (the last user submit information)
             var num_visatype = jQuery("#last_visatype").attr("value");
             if (num_visatype) jQuery(jQuery("#sel_visatype option")[num_visatype-1]).attr("selected","selected");
@@ -57,17 +75,18 @@ $caseid = @$_GET["id"]; // caseid
                 
                 <div id="tab_view" class="tab_title <?php if($ac=="view"){echo "tab_highlight";} ?>">
                     <a>View Case Detail</a>
-                    <form action="index.php?do=case&ac=view&id=<?php echo $caseid; ?>" method="post">
-                        <div><input type="submit" name="submit_type" value="Go" /></div>
-                    </form>
+                    <!--<form action="index.php?do=case&ac=view&id=" method="post">
+                        <div><input type="submit" name="submit_type" value="Go" <?php ?> /></div>
+                    </form>-->
                 </div>
-                <div id="tab_update" class="tab_title <?php if($ac=="type"){echo "tab_highlight";} ?>">
-                    <a>Update this Case</a>
-                    <form action="index.php?do=index&ac=type" method="post">
+                <div id="tab_update" class="tab_title <?php if($ac=="update"){echo "tab_highlight";} ?>">
+                    <a>Update Case</a>
+                    <!--<form action="index.php?do=case&ac=update" method="post">
+                        <input type="hidden" />
                         <div><label>username:</label><input type="text" name="username" /></div>
                         <div><label>password:</label><input type="password" name="password" /></div>
                         <div><input type="submit" name="submit_type" value="Go" /></div>
-                    </form>
+                    </form>-->
                 </div>
                 <div id="tab_add" class="tab_title <?php if($ac=="add"){echo "tab_highlight";} ?>">
                     <a>Add yours</a>
@@ -80,14 +99,13 @@ $caseid = @$_GET["id"]; // caseid
 		<?php
                 // two types of layout, one is for viewall, others use a layout
                 // contain some statistical data
-                if ($ac == "view")
-                {
+                if ($ac == "view"){
                     include_once(FROOT."module/case/_view.php");
-                }
-                elseif ($ac == "add")
-                {
+                }elseif ($ac == "add"){
                     include_once(FROOT."module/case/_add.php");
-                } else { // layout for others
+                }elseif ($ac == "update"){
+                    include_once(FROOT."module/case/_update.php");
+                }else { // layout for others
                     
                 }
                 ?>

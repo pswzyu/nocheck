@@ -34,8 +34,8 @@ class ViewStatistics {
 
             $type_count = array_fill(0, count(Enums::$enum_status), 0);
             $total_wait = 0;
-            $this->udb->query($sql);
-            while ($one_data = $this->udb -> fetch_assoc())
+            $query_handle = $this->udb->query($sql);
+            while ($one_data = $this->udb -> fetch_assoc($query_handle))
             {
                 $type_count[intval($one_data["ApplicationStatus"])] += 1;
                 $wait_time = empty($one_data["wait"])?0:intval($one_data["wait"]);
@@ -57,7 +57,7 @@ class ViewStatistics {
             $table[] = array( "yearmonth"=>$value, "clear"=>$type_count[1], "pending"=>$type_count[2],
                 "rejected"=>$type_count[3], "total"=>$total_people, "avg_wait"=>$avg_wait );
 
-            $this->udb -> free_result();
+            $this->udb -> free_result($query_handle);
         }
         
         return $table;

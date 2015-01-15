@@ -10,46 +10,35 @@ require(__DIR__.DIRECTORY_SEPARATOR."../../common/protect.php");
 
 include_once(FROOT."classes/CaseOperation.class.php");
 
-// get the case information by caseid and then display it
-//$udb->query("SELECT * FROM `nocheck_cases` WHERE id=".$caseid);
-
-//$table = $udb->fetch_assoc();
-
-/*
-$VisaType = Enums::$enum_visatype[$table["VisaType"]];
-$VisaEntry = Enums::$enum_visaentry[$table["VisaEntry"]];
-$Consulate = Enums::$enum_consulate[$table["Consulate"]];
-$Degree = Enums::$enum_degree[$table["Degree"]];
-$ApplicationStatus = Enums::$enum_status[$table["ApplicationStatus"]];
-*/
-
-$info["dos_id"] = isset($_POST["dos_id"])?$_POST["dos_id"]:"";
-$info["email"] = isset($_POST["email"])?$_POST["email"]:"";
-$info["password"] = isset($_POST["password"])?$_POST["password"]:"";
-$info["firstname"] = isset($_POST["firstname"])?$_POST["firstname"]:"";
-$info["lastname"] = isset($_POST["lastname"])?$_POST["lastname"]:"";
-$info["visatype"] = isset($_POST["visatype"])?$_POST["visatype"]:"";
-$info["visaentry"] = isset($_POST["visaentry"])?$_POST["visaentry"]:"";
-$info["consulate"] = isset($_POST["consulate"])?$_POST["consulate"]:"";
-$info["yearsinusa"] = isset($_POST["yearsinusa"])?$_POST["yearsinusa"]:"";
-$info["citizenship"] = isset($_POST["citizenship"])?$_POST["citizenship"]:"";
-$info["university"] = isset($_POST["university"])?$_POST["university"]:"";
-$info["degree"] = isset($_POST["university"])?$_POST["degree"]:"";
-$info["major"] = isset($_POST["major"])?$_POST["major"]:"";
-$info["employer"] = isset($_POST["employer"])?$_POST["employer"]:"";
-$info["jobtitle"] = isset($_POST["jobtitle"])?$_POST["jobtitle"]:"";
-$info["applydate"] = isset($_POST["applydate"])?$_POST["applydate"]:date("Y-m-d");
-$info["note"] = isset($_POST["note"])?$_POST["note"]:"";
-
 $notify = "";
 $case_operator = new CaseOperation($udb);
 
 # check if the user has entered the information
 if (isset($_POST["submit"]))
-{    
-    $new_case_dbid = $case_operator->addCase($info);
+{
+    $info["id"] = $caseid;
+    $info["dos_id"] = isset($_POST["dos_id"])?$_POST["dos_id"]:"";
+    $info["email"] = isset($_POST["email"])?$_POST["email"]:"";
+    $info["password"] = isset($_POST["password"])?$_POST["password"]:"";
+    $info["firstname"] = isset($_POST["firstname"])?$_POST["firstname"]:"";
+    $info["lastname"] = isset($_POST["lastname"])?$_POST["lastname"]:"";
+    $info["visatype"] = isset($_POST["visatype"])?$_POST["visatype"]:"";
+    $info["visaentry"] = isset($_POST["visaentry"])?$_POST["visaentry"]:"";
+    $info["consulate"] = isset($_POST["consulate"])?$_POST["consulate"]:"";
+    $info["yearsinusa"] = isset($_POST["yearsinusa"])?$_POST["yearsinusa"]:"";
+    $info["citizenship"] = isset($_POST["citizenship"])?$_POST["citizenship"]:"";
+    $info["university"] = isset($_POST["university"])?$_POST["university"]:"";
+    $info["degree"] = isset($_POST["university"])?$_POST["degree"]:"";
+    $info["major"] = isset($_POST["major"])?$_POST["major"]:"";
+    $info["employer"] = isset($_POST["employer"])?$_POST["employer"]:"";
+    $info["jobtitle"] = isset($_POST["jobtitle"])?$_POST["jobtitle"]:"";
+    $info["applydate"] = isset($_POST["applydate"])?$_POST["applydate"]:"";
+    $info["cleardate"] = isset($_POST["cleardate"])?$_POST["cleardate"]:"";
+    $info["note"] = isset($_POST["note"])?$_POST["note"]:"";
     
-    if ($new_case_dbid == -1)
+    $ret = $case_operator->updateCase($info);
+    
+    if ($ret == -1)
     {
         $error_msg = $case_operator->getErrorMessage();
         foreach( $error_msg as $fieldname => $content )
@@ -57,12 +46,22 @@ if (isset($_POST["submit"]))
             $notify .= "<div class='error_msg'>{$content}</div>";
         }
     }else{
-        $notify = "<div class='info_msg'>Added Successfully!</div>";
+        $notify = "<div class='info_msg'>Updated Successfully!</div>";
     }
-    
     // since the data comes from html directly, we need to strip the slashes added in
     // order to display normally to the user
     $info = sstripslashes($info);
+    
+}else{ // otherwise, the user just arrived this page, get the detail of the case and list them
+    // inside each input box
+    $info = $case_operator->getCase($caseid);
+    // if this case is from checkee, then provide the notice and redirect link
+    if ($info["checkee_id"]){
+        $notify = "This case is from checkee.info, please update the case at "
+                . "<a href='http://www.checkee.info/update.php?casenum={$info["checkee_id"]}'>here</a>";
+    }
+    // also disable the submit button
+    
     
 }
 
@@ -70,33 +69,29 @@ if (isset($_POST["submit"]))
 
 <div id="main_table" >
     <div id="notify_back" class=""><?php echo $notify; ?></div>
-    <form action="index.php?do=case&ac=add" method="post">
+    <form action="index.php?do=case&ac=update&id=<?php echo $caseid; ?>" method="post">
         <table border="1">
             <tr><td>DS-160 Case ID</td><td><input type="text" name="dos_id"
-                    value="<?php echo $info["dos_id"]; ?>"/><span class="form_req">*</span></td></tr>
+                                               value="<?php echo $info["dos_id"]; ?>"/></td></tr>
             <tr><td>Email</td><td><input type="text" name="email"
-                    value="<?php echo $info["email"]; ?>"/><span class="form_req">*</span></td></tr>
-            <tr><td>Password</td><td><input type="password" name="password"
-                    value="<?php echo $info["password"]; ?>"/><span class="form_req">*</span></td></tr>
+                                         value="<?php echo $info["email"]; ?>"/></td></tr>
+            
             <tr><td>First Name</td><td><input type="text" name="firstname"
                                               value="<?php echo $info["firstname"]; ?>"/></td></tr>
             <tr><td>Last Name</td><td><input type="text" name="lastname"
                                              value="<?php echo $info["lastname"]; ?>"/></td></tr>
             
             <tr><td>Visa Type</td><td><select id="sel_visatype" name="visatype">
-                        <option value="0" disabled selected >-- Please Select --</option>
                         <option value="1">F1</option><option value="2">F2</option>
                         <option value="3">H1</option><option value="4">H4</option>
                         <option value="5">J1</option><option value="6">J2</option>
                         <option value="7">B1</option><option value="8">B2</option>
                         <option value="9">L1</option><option value="10">L2</option>
-                    </select><span class="form_req">*</span></td></tr>
+                    </select></td></tr>
             <tr><td>Visa Entry</td><td><select id="sel_visaentry" type="text" name="visaentry">
-                        <option value="0" disabled selected >-- Please Select --</option>
                         <option value="1">New</option><option value="2">Renewal</option>
-                    </select><span class="form_req">*</span></td></tr>
+                    </select></td></tr>
             <tr><td>US Consulate</td><td><select id="sel_consulate" name="consulate">
-                        <option value="0" disabled selected >-- Please Select --</option>
                         <option value="1">BeiJing</option><option value="2">ChengDu</option>
                         <option value="3">Chennai</option><option value="4">Europe</option>
                         <option value="5">GuangZhou</option><option value="6">HongKong</option>
@@ -107,7 +102,7 @@ if (isset($_POST["submit"]))
                         <option value="15">ShenYang</option><option value="16">Tijuana</option>
                         <option value="17">Toronto</option><option value="18">Vancouver</option>
                         <option value="19">Others</option>
-                    </select><span class="form_req">*</span></td></tr>
+                    </select></td></tr>
             <tr><td>Years In USA</td><td><input type="text" name="yearsinusa"
                                                 value="<?php echo $info["yearsinusa"]; ?>"></td></tr>
             <tr><td>Citizenship</td><td><input type="text" name="citizenship"
@@ -116,11 +111,10 @@ if (isset($_POST["submit"]))
             <tr><td>University(College)</td><td><input type="text" name="university"
                                                        value="<?php echo $info["university"]; ?>"></td></tr>
             <tr><td>Degree</td><td><select id="sel_degree" name="degree">
-                        <option value="0" disabled selected >-- Please Select --</option>
                         <option value="1">N/A</option><option value="2">BS</option>
                         <option value="3">MS</option><option value="4">Ph.D</option>
                         <option value="5">Others</option>
-                    </select><span class="form_req">*</span></td></tr>
+                    </select></td></tr>
             <tr><td>Major</td><td><input type="text" name="major"
                                          value="<?php echo $info["major"]; ?>"></td></tr>
             <tr><td>Employer</td><td><input type="text" name="employer"
@@ -130,6 +124,8 @@ if (isset($_POST["submit"]))
             
             <tr><td>Apply Date</td><td><input id="dp_applydate" type="text" name="applydate"
                                               value="<?php echo $info["applydate"]; ?>"></td></tr>
+            <tr><td>Clear Date</td><td><input id="dp_cleardate" type="text" name="cleardate"
+                                              value="<?php echo $info["cleardate"]; ?>"></td></tr>
             
             <tr><td>Note</td><td>
                 <textarea cols="50" rows="10" name="note"><?php echo $info["note"]; ?></textarea>
@@ -140,7 +136,9 @@ if (isset($_POST["submit"]))
         <input type="hidden" id="last_visaentry" value="<?php echo $info["visaentry"]; ?>"/>
         <input type="hidden" id="last_consulate" value="<?php echo $info["consulate"]; ?>"/>
         <input type="hidden" id="last_degree" value="<?php echo $info["degree"]; ?>"/>
-        <input type="submit" name="submit" value="Submit" />
+        <label>Password</label><input type="password" name="password"/>
+        <input type="submit" name="submit"<?php if(isset($info["checkee_id"])&&$info["checkee_id"])
+            echo "disabled='disabled'"; ?> value="Update" />
     </form>
     
 </div>

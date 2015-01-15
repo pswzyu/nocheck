@@ -3,6 +3,8 @@
  *     $menubar_para["is_admin"] 当前用户类型， 是否为管理员 admin/user
  */
 
+require(__DIR__.DIRECTORY_SEPARATOR."../../common/protect.php");
+
 ?>
 <div id="menubar">
     <ul>

@@ -11,7 +11,9 @@
  *
  * @author pswzyu
  */
-require_once(FROOT.'lib/php/formvalidator.php');
+//require_once(FROOT.'lib/php/formvalidator.php');
+
+use Respect\Validation\Validator as v;
 
 class CaseOperation {
     //put your code here
@@ -28,6 +30,45 @@ class CaseOperation {
     }
     
     /*
+     * this function use the Respect Validator to valid the form uploaded by the
+     * user to see if the form contents are valid.
+     * return the errors, each content in the errors array is an error
+     */
+    private function validateForm($info)
+    {
+        $errors = array();
+        // validate dos_id
+        if (! v::alnum()->notEmpty()->validate($info["dos_id"]) ){
+            $errors["dos_id"] = "Please fill in DS160 ID!";
+        }
+        // validate email
+        if (! v::Email()->notEmpty()->validate($info["email"]) ){
+            $errors["email"] = "Please fill in a valid Email address!";
+        }
+        // validate password
+        if (! v::notEmpty()->validate($info["password"]) ){
+            $errors["password"] = "Please fill in a valid password!";
+        }
+        // visa type
+        if (! v::int()->between(1,10,TRUE)->notEmpty()->validate($info["visatype"]) ){
+            $errors["visatype"] = "Invalid visa type!";
+        }
+        // visa entry
+        if (! v::int()->between(1,2,TRUE)->notEmpty()->validate($info["visaentry"]) ){
+            $errors["visaentry"] = "Invalid visa entry!";
+        }
+        // consulate
+        if (! v::int()->between(1,19,TRUE)->notEmpty()->validate($info["consulate"]) ){
+            $errors["consulate"] = "Invalid consulate!";
+        }
+        // degree
+        if (! v::int()->between(1,5,TRUE)->notEmpty()->validate($info["degree"]) ){
+            $errors["degree"] = "Invalid degree!";
+        }
+        return $errors;
+    }
+    
+    /*
      * function to add a case to database
      * the param in is the information extracted from form submitted.
      * This function return the db id of the new case if succeeded.
@@ -35,54 +76,95 @@ class CaseOperation {
      */
     public function addCase($info)
     {
-        $validator = new FormValidator();
-        $validator->addValidation("dos_id","req","Please fill in Case ID!");
-        $validator->addValidation("email","email","Please use a valid email address!");
-        $validator->addValidation("email","req","Please fill in Email");
-        $validator->addValidation("visatype","req","Please fill in the type of visa!");
-        $validator->addValidation("visatype", "num", "Please fill in the type of visa!");
-        $validator->addValidation("visaentry","req","Please fill in visa application type!");
-        $validator->addValidation("visaentry", "num", "Please fill in visa application type!");
-        $validator->addValidation("consulate","req","Please fill in the consulate!");
-        $validator->addValidation("consulate", "num", "Please fill in the consulate!");
-        $validator->addValidation("applydate", "req", "Please fill in the date of interview!");
-        if($validator->ValidateForm($info))
-        {
-            // first check if this dos_caseid is added before
-            $this->udb->query("SELECT * FROM `nocheck_cases` WHERE `DOS_CaseId`='{$info["dos_id"]}';");
-            if ($this->udb->get_error_no())
-            {
-                $this->error["dos_id"] = "DOS Case ID you gave is invalid";
-                return -1;
-            }elseif ($this->udb->fetch_assoc()){
-                $this->error["dos_id"] = "DOS Case ID is already exist in our database! You can update ".
-                        "it after login!";
-                return -1;
-            }else{
-                $this->udb->query("INSERT INTO `nocheck`.`nocheck_cases`
-                    (`id`, `Checkee_CaseId`, `Nickname`, `DOS_CaseId`, `Email`,
-                    `ApplicationDate`, `ClearanceDate`, `VisaType`, `VisaEntry`,
-                    `Consulate`, `Major_old`, `ApplicationStatus`, `Note`, `LastName`,
-                    `FirstName`, `University`, `Degree`, `Employer`, `JobTitle`,
-                    `YearsInUSA`, `Citizenship`) VALUES (NULL, NULL, NULL,
-                    '{$info["dos_id"]}', '{$info["email"]}', '{$info["applydate"]}', NULL,'{$info["visatype"]}',
-                    '{$info["visaentry"]}', '{$info["consulate"]}', '{$info["major"]}', 2, '{$info["note"]}',
-                    '{$info["lastname"]}', '{$info["firstname"]}', '{$info["university"]}','{$info["degree"]}',
-                    '{$info["employer"]}', '{$info["jobtitle"]}', '{$info["yearsinusa"]}', '{$info["citizenship"]}');");
-                if ($this->udb->get_error_no())
-                {
-                    $this->udb->error["Unknown"] = "Unknown error";
-                    return -1;
-                }else{
-                    return $this->udb->inserted_id();
-                }
-            }
-        }else{
-            // here is for validation falure, write the error and return -1
-            $this->error = $validator->GetErrors();
+        $this->error = $this->validateForm($info);
+        
+        if (!empty($this->error)) {
             return -1;
         }
+        // first check if this dos_caseid is added before
+        $query_handle = $this->udb->query("SELECT * FROM `nocheck_cases` WHERE `DOS_CaseId`='{$info["dos_id"]}';");
+        if ($this->udb->get_error_no()) {
+            $this->error["dos_id"] = "DS-160 Case ID you gave is invalid";
+            return -1;
+        }
+        $exist = $this->udb->fetch_assoc($query_handle);
+        $this->udb->free_result($query_handle);
+        if ($exist) {
+            $this->error["dos_id"] = "DS-160 Case ID is already exist in our database! You can update ".
+                    "it <a href='index.php?do=case&ac=update&id={$exist["id"]}'>here</a>!";
+            return -1;
+        }
+        // insert the detail of the case into case table
+        $this->udb->query("INSERT INTO `nocheck`.`nocheck_cases`
+            (`id`, `Checkee_CaseId`, `Nickname`, `DOS_CaseId`, `Email`, `Password`,
+            `ApplicationDate`, `ClearanceDate`, `VisaType`, `VisaEntry`,
+            `Consulate`, `Major_old`, `ApplicationStatus`, `Note`, `LastName`,
+            `FirstName`, `University`, `Degree`, `Employer`, `JobTitle`,
+            `YearsInUSA`, `Citizenship`) VALUES (NULL, NULL, NULL,
+            '{$info["dos_id"]}', '{$info["email"]}', '{$info["password"]}', '{$info["applydate"]}', NULL,'{$info["visatype"]}',
+            '{$info["visaentry"]}', '{$info["consulate"]}', '{$info["major"]}', 2, '{$info["note"]}',
+            '{$info["lastname"]}', '{$info["firstname"]}', '{$info["university"]}','{$info["degree"]}',
+            '{$info["employer"]}', '{$info["jobtitle"]}', '{$info["yearsinusa"]}', '{$info["citizenship"]}');");
+        if ($this->udb->get_error_no())
+        {
+            $this->udb->error["Unknown"] = "Fatal error: error when recording case detail!";
+            return -1;
+        }
+
+        return $this->udb->inserted_id();
     }
+    
+    /*
+     * function to update a case to database
+     * the param in is the information extracted from form submitted.
+     * This function return 1 if succeeded.
+     * return -1 if failed
+     */
+    public function updateCase($info)
+    {
+        $this->error = $this->validateForm($info);
+        
+        if (!empty($this->error)){
+            return -1;
+        }
+        // first check the password
+        $query_handle = $this->udb->query("SELECT * FROM `nocheck_cases` WHERE `id`='{$info["id"]}';");
+        if ($this->udb->get_error_no()) {
+            $this->error["id"] = "Invalid ID";
+            return -1;
+        }
+        $exist = $this->udb->fetch_assoc($query_handle);
+        $this->udb->free_result($query_handle);
+        if (!$exist) {
+            $this->error["id"] = "ID does not exist";
+            return -1;
+        }
+        if ($exist["Password"] != $info["password"]) {
+            // TODO: retrieve password page link
+            $this->error["password"] = "Password is wrong, you can retrieve your password from <a href=''>here</a>";
+            return -1;
+        }
+
+        // insert the detail of the case into case table
+        $this->udb->query("UPDATE `nocheck`.`nocheck_cases` SET
+            `DOS_CaseId`='{$info["dos_id"]}', `Email`='{$info["email"]}', `ApplicationDate`='{$info["applydate"]}',
+            `ClearanceDate`='{$info["cleardate"]}', `VisaType`='{$info["visatype"]}', `VisaEntry`='{$info["visaentry"]}',
+            `Consulate`='{$info["consulate"]}', `Major_old`='{$info["major"]}', `Note`='{$info["note"]}',
+            `LastName`='{$info["lastname"]}', `FirstName`='{$info["firstname"]}', `University`='{$info["university"]}',
+            `Degree`='{$info["degree"]}', `Employer`='{$info["employer"]}', `JobTitle`='{$info["jobtitle"]}',
+            `YearsInUSA`='{$info["yearsinusa"]}', `Citizenship`='{$info["citizenship"]}'
+            WHERE `id`={$info["id"]}");
+        if ($this->udb->get_error_no())
+        {
+            $this->udb->error["Unknown"] = "Fatal error: error when updating case detail!";
+            return -1;
+        }
+
+        return $this->udb->inserted_id();
+    }
+    
+    
+    
     
     /*
      * this function is used to get the information of one case from the database
@@ -91,7 +173,32 @@ class CaseOperation {
      */
     public function getCase($id)
     {
-        // TODO: finish this function if needed
+        $query_handle = $this->udb->query("SELECT * FROM `nocheck_cases` WHERE `id`={$id}");
+        $db_result = $this->udb->fetch_assoc($query_handle);
+        $this->udb->free_result($query_handle);
+        
+        $info["id"] = $id;
+        $info["checkee_id"] = $db_result["Checkee_CaseId"];
+        $info["dos_id"] = $db_result["DOS_CaseId"];
+        $info["email"] = $db_result["Email"];
+        $info["password"] = $db_result["Password"];
+        $info["firstname"] = $db_result["FirstName"];
+        $info["lastname"] = $db_result["LastName"];
+        $info["visatype"] = $db_result["VisaType"];
+        $info["visaentry"] = $db_result["VisaEntry"];
+        $info["consulate"] = $db_result["Consulate"];
+        $info["yearsinusa"] = $db_result["YearsInUSA"];
+        $info["citizenship"] = $db_result["Citizenship"];
+        $info["university"] = $db_result["University"];
+        $info["degree"] = $db_result["Degree"];
+        $info["major"] = $db_result["Major_old"];
+        $info["employer"] = $db_result["Employer"];
+        $info["jobtitle"] = $db_result["JobTitle"];
+        $info["applydate"] = $db_result["ApplicationDate"];
+        $info["cleardate"] = $db_result["ClearanceDate"];
+        $info["note"] = $db_result["Note"];
+        
+        return $info;
     }
     
     /*

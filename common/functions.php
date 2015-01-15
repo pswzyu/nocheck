@@ -9,6 +9,31 @@ function saddslashes($string) {
 	}
 	return $string;
 }
+function sstripslashes($string) {
+	if(is_array($string)) {
+		foreach($string as $key => $val) {
+			$string[$key] = stripslashes($val);
+		}
+	} else {
+		$string = stripslashes($string);
+	}
+	return $string;
+}
+
+function _SAFEGET($key) {
+    if(isset($_GET[$key])){
+        return $_GET[$key];
+    }else{
+        return null;
+    }
+}
+function _SAFEPOST($key) {
+    if(isset($_POST[$key])){
+        return $_POST[$key];
+    }else{
+        return null;
+    }
+}
 
 function shtmlspecialchars($string) {
 	if(is_array($string)) {
@@ -48,11 +73,7 @@ function getonlineip($format=0) {
 		return $_SGLOBAL['onlineip'];
 	}
 }
-function protect()
-{
-	if (!defined("NOCHECK"))
-	{
-		die("非法访问！请返回首页！");
-	}
-}
+
+
+
 ?>
