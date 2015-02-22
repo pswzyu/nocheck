@@ -27,9 +27,6 @@ $start_m = intval("08");
 $end_y = intval(date("Y"));
 $end_m = intval(date("m"));
 
-$end_y = 2013;
-$end_m = 10;
-
 if (1)
 {
     
