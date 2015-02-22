@@ -13,6 +13,8 @@
  * also, this script will find out the records in our database which are still not finished, use
  * their ds160 id to check the status of this application on ceac website.
  * this script will also call the email sending utility to send email to the user about this update
+ * 
+ * the parameter of the command is the action, the action can be "checkee" or "ceac"
  */
 
 include_once("./common/types.php");
@@ -27,7 +29,17 @@ $start_m = intval("08");
 $end_y = intval(date("Y"));
 $end_m = intval(date("m"));
 
-if (1)
+if (!isset($argv[1])){
+    die("Error: No action given!");
+}
+$ac = $argv[1];
+$acs = array("checkee", "ceac");
+if(empty($ac) || !in_array($ac, $acs)) {
+    die("Error: Invalid action!");
+}
+
+
+if ($ac == "checkee")
 {
     
 /*
@@ -306,7 +318,7 @@ while (true)
  * 
  * 
  */
-if (1){
+if ($ac == "ceac"){
 
 
 include_once __DIR__.DIRECTORY_SEPARATOR.'./classes/CaseOperation.class.php';
