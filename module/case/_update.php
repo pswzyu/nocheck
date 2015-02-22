@@ -72,9 +72,9 @@ if (isset($_POST["submit"]))
     <form action="index.php?do=case&ac=update&id=<?php echo $caseid; ?>" method="post">
         <table border="1">
             <tr><td>DS-160 Case ID</td><td><input type="text" name="dos_id"
-                                               value="<?php echo $info["dos_id"]; ?>"/></td></tr>
+                    value="<?php echo $info["dos_id"]; ?>"/><span class="form_req">*</span></td></tr>
             <tr><td>Email</td><td><input type="text" name="email"
-                                         value="<?php echo $info["email"]; ?>"/></td></tr>
+                    value="<?php echo $info["email"]; ?>"/><span class="form_req">*</span></td></tr>
             
             <tr><td>First Name</td><td><input type="text" name="firstname"
                                               value="<?php echo $info["firstname"]; ?>"/></td></tr>
@@ -82,16 +82,19 @@ if (isset($_POST["submit"]))
                                              value="<?php echo $info["lastname"]; ?>"/></td></tr>
             
             <tr><td>Visa Type</td><td><select id="sel_visatype" name="visatype">
+                        <option value="0" disabled selected >-- Please Select --</option>
                         <option value="1">F1</option><option value="2">F2</option>
                         <option value="3">H1</option><option value="4">H4</option>
                         <option value="5">J1</option><option value="6">J2</option>
                         <option value="7">B1</option><option value="8">B2</option>
                         <option value="9">L1</option><option value="10">L2</option>
-                    </select></td></tr>
+                    </select><span class="form_req">*</span></td></tr>
             <tr><td>Visa Entry</td><td><select id="sel_visaentry" type="text" name="visaentry">
+                        <option value="0" disabled selected >-- Please Select --</option>
                         <option value="1">New</option><option value="2">Renewal</option>
-                    </select></td></tr>
+                    </select><span class="form_req">*</span></td></tr>
             <tr><td>US Consulate</td><td><select id="sel_consulate" name="consulate">
+                        <option value="0" disabled selected >-- Please Select --</option>
                         <option value="1">BeiJing</option><option value="2">ChengDu</option>
                         <option value="3">Chennai</option><option value="4">Europe</option>
                         <option value="5">GuangZhou</option><option value="6">HongKong</option>
@@ -102,7 +105,7 @@ if (isset($_POST["submit"]))
                         <option value="15">ShenYang</option><option value="16">Tijuana</option>
                         <option value="17">Toronto</option><option value="18">Vancouver</option>
                         <option value="19">Others</option>
-                    </select></td></tr>
+                    </select><span class="form_req">*</span></td></tr>
             <tr><td>Years In USA</td><td><input type="text" name="yearsinusa"
                                                 value="<?php echo $info["yearsinusa"]; ?>"></td></tr>
             <tr><td>Citizenship</td><td><input type="text" name="citizenship"
@@ -111,10 +114,11 @@ if (isset($_POST["submit"]))
             <tr><td>University(College)</td><td><input type="text" name="university"
                                                        value="<?php echo $info["university"]; ?>"></td></tr>
             <tr><td>Degree</td><td><select id="sel_degree" name="degree">
+                        <option value="0" disabled selected >-- Please Select --</option>
                         <option value="1">N/A</option><option value="2">BS</option>
                         <option value="3">MS</option><option value="4">Ph.D</option>
                         <option value="5">Others</option>
-                    </select></td></tr>
+                    </select><span class="form_req">*</span></td></tr>
             <tr><td>Major</td><td><input type="text" name="major"
                                          value="<?php echo $info["major"]; ?>"></td></tr>
             <tr><td>Employer</td><td><input type="text" name="employer"
@@ -137,7 +141,7 @@ if (isset($_POST["submit"]))
         <input type="hidden" id="last_consulate" value="<?php echo $info["consulate"]; ?>"/>
         <input type="hidden" id="last_degree" value="<?php echo $info["degree"]; ?>"/>
         <label>Password</label><input type="password" name="password"/>
-        <input type="submit" name="submit"<?php if(isset($info["checkee_id"])&&$info["checkee_id"])
+        <input type="submit" name="submit"<?php if(empty($info["dos_id"]))
             echo "disabled='disabled'"; ?> value="Update" />
     </form>
     

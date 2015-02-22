@@ -56,13 +56,13 @@ if ($ac == "add"){
             jQuery("#dp_cleardate").datepick({dateFormat: 'yyyy-mm-dd'});
             // restore the last state (the last user submit information)
             var num_visatype = jQuery("#last_visatype").attr("value");
-            if (num_visatype) jQuery(jQuery("#sel_visatype option")[num_visatype-1]).attr("selected","selected");
+            if (num_visatype) jQuery(jQuery("#sel_visatype option")[num_visatype]).attr("selected","selected");
             var num_visaentry = jQuery("#last_visaentry").attr("value");
-            if (num_visaentry) jQuery(jQuery("#sel_visaentry option")[num_visaentry-1]).attr("selected","selected");
+            if (num_visaentry) jQuery(jQuery("#sel_visaentry option")[num_visaentry]).attr("selected","selected");
             var num_consulate = jQuery("#last_consulate").attr("value");
-            if (num_consulate) jQuery(jQuery("#sel_consulate option")[num_consulate-1]).attr("selected","selected");
+            if (num_consulate) jQuery(jQuery("#sel_consulate option")[num_consulate]).attr("selected","selected");
             var num_degree = jQuery("#last_degree").attr("value");
-            if (num_degree) jQuery(jQuery("#sel_degree option")[num_degree-1]).attr("selected","selected");
+            if (num_degree) jQuery(jQuery("#sel_degree option")[num_degree]).attr("selected","selected");
         });
     </script>
 </head>

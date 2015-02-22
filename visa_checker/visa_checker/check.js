@@ -36,7 +36,7 @@ page.open("https://ceac.state.gov/CEACStatTracker/Status.aspx?App=NIV", function
         var result_div = page.evaluate(function(){
             return document.querySelector("span#ctl00_ContentPlaceHolder1_ucApplicationStatusView_lblStatus");
         });
-        if (result_div.attributes != null)
+        if (result_div.innerHTML != "")
         {
             var visa_status = result_div.innerHTML;
             var visa_detail = page.evaluate(function(){
@@ -44,7 +44,7 @@ page.open("https://ceac.state.gov/CEACStatTracker/Status.aspx?App=NIV", function
                 var status = document.querySelector("span#ctl00_ContentPlaceHolder1_ucApplicationStatusView_lblStatus").innerHTML;
                 var create_time = document.querySelector("span#ctl00_ContentPlaceHolder1_ucApplicationStatusView_lblSubmitDate").innerHTML;
                 var update_time = document.querySelector("span#ctl00_ContentPlaceHolder1_ucApplicationStatusView_lblStatusDate").innerHTML;
-                return status+","+create_time+","+update_time;
+				return status+","+create_time+","+update_time;
             });
             //visa_detail = visa_detail.innerHTML;
             console.log("success,"+visa_detail);

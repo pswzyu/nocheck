@@ -25,3 +25,11 @@ function log_end($log_id)
 {
     
 }
+
+function log_unexpected_event($db_con, $title, $message)
+{
+    $title = addslashes($title);
+    $message = addslashes($message);
+    $db_con->query("INSERT INTO `nocheck`.`nocheck_log` (`id`, `remark`, `input1`) "
+            . "VALUES (NULL, 'unseen', '{$title}', '{$message}');");
+}

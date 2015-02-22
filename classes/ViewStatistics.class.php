@@ -39,6 +39,7 @@ class ViewStatistics {
             {
                 $type_count[intval($one_data["ApplicationStatus"])] += 1;
                 $wait_time = empty($one_data["wait"])?0:intval($one_data["wait"]);
+                if ($wait_time < 0) $wait_time = 0;
                 // only consider the cleared case
                 if ( intval($one_data["ApplicationStatus"]) == 1 )
                 {

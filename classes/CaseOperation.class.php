@@ -238,8 +238,10 @@ class CaseOperation {
      */
     public function convertStatusNameToCode($status_name)
     {
-        if ($status_name == "Ready"){
-            return 2;
+        if ($status_name == "No Status") { // just created the ds160 form
+            return 5;
+        }elseif ($status_name == "Ready"){ // ?
+            return 4;
         }elseif ($status_name == "Administrative Processing"){
             return 2;
         }elseif ($status_name == "Issued"){
@@ -247,5 +249,41 @@ class CaseOperation {
         }else{
             return 0;
         }
+    }
+    
+    /*
+     * get the masked email address, the masked email address will only show the first three chars
+     * of the username of the email address.
+     * the masked email address is used for showing to others in the case detail or page for updating case
+     * input: the original email address
+     * output: the masked(using *) address
+     */
+    public function getMaskedEmailAddress($email)
+    {
+        $cut = 3;
+        $result_parts = explode("@", $email);
+        if (strlen($result_parts[0]) > $cut) {
+            $first = substr($result_parts[0], 0, $cut);
+            return $first.str_repeat("*", strlen($result_parts[0])-$cut)."@".$result_parts[1];
+        }else{
+            return $result_parts[0].str_repeat("*", $cut)."@".$result_parts[1];
+        }
+    }
+    
+    /*
+     * get the masked ds160 id, the masked ds160 id will only show the leading two and the tail three chars.
+     * the masked ds160 id is used for showing to others in the case detail or page for updating case
+     * input: the original ds160 id
+     * output: the masked(using *) ds160 id
+     */
+    public function getMaskedDS160ID($dsid)
+    {
+        $cut1 = 2;
+        $cut2 = 3;
+        
+        $first = substr($dsid, 0, $cut1);
+        $second = str_repeat("*", strlen($dsid)-$cut1-$cut2);
+        $third = substr($dsid, strlen($dsid)-$cut2, $cut2);
+        return $first.$second.$third;
     }
 }

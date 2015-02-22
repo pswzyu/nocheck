@@ -7,7 +7,7 @@
  */
 require(__DIR__.DIRECTORY_SEPARATOR."../../common/protect.php");
 
-$pagesize = 5;
+$pagesize = 10;
 
 $pageinfo = get_yearmonth_page_d("2012-08", date("Y-m"), $page_now, $pagesize);
 

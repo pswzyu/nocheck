@@ -13,7 +13,6 @@ $pagesize = 10;
 $sql = "SELECT *,DATEDIFF(`ClearanceDate`,`ApplicationDate`) AS `wait`
             FROM `nocheck_cases`
             WHERE `Email` LIKE '%{$pg_email}%' ";
-echo $sql;
 
 $type_count = array_fill(0, count($enum_status), 0);
 $total_wait = 0;
@@ -92,7 +91,8 @@ $udb -> free_result($query_handle);
     {
         $page = $step + 1;
         $highlight = $step==$pageno?"class='page_highlight'":"";
-        echo "<div><a {$highlight} href='index.php?do=index&ac=email&email={$pg_email}'>{$page}</a></div>";
+        echo "<div><a {$highlight} href='index.php?do=index&ac=email&email={$pg_email}"
+            ."&pageno={$step}'>{$page}</a></div>";
         
     }
     ?>

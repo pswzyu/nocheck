@@ -27,8 +27,10 @@ $start_m = intval("08");
 $end_y = intval(date("Y"));
 $end_m = intval(date("m"));
 
+$end_y = 2013;
+$end_m = 10;
 
-if (0)
+if (1)
 {
     
 /*
@@ -288,7 +290,7 @@ while (true)
     }
     
     
-    // decrement one month
+    // decrease one month
     $end_m --;
     if ($end_m < 1)
     {
@@ -345,36 +347,83 @@ while ($open_case = $udb -> fetch_assoc($query_handle))
     
     if ($result_parts[0] == "failed")
     {
-        // TODO: deal with failed check
+        // check the reason
+        if ($result_parts[1] == "Invalid caseid!") {
+            // tell the user
+            $mail->ClearAddresses();
+            $mail->AddAddress($open_case["Email"]); // recipients email
+            $mail->Body    = sprintf($config_email_error_body, $open_case["id"]);
+
+            if(!$mail->Send())
+                echo "Mailer Error: " . $mail->ErrorInfo."\n";
+            else
+                echo "Message has been sent!\n";
+            
+        }elseif ($result_parts[1] == "Time limit exceeded!") {
+            // tell the admin
+            $mail->ClearAddresses();
+            $mail->AddAddress($config_email_username); // recipients email
+            $mail->Body    = "ALERT:visa checking took too much time:"+$open_case["DOS_CaseId"]+
+                    ", "+$check_result;
+
+            if(!$mail->Send())
+                echo "Mailer Error: " . $mail->ErrorInfo."\n";
+            else
+                echo "Message has been sent!\n";
+        }
     }elseif($result_parts[0] == "success"){
         // only email the user when status changes
         $new_status = $co->convertStatusNameToCode($result_parts[1]);
-        $case_start_date = date_format(date_create_from_format("d-M-Y", $result_parts[2]), "Y-m-d");
-        $case_end_date = date_format(date_create_from_format("d-M-Y", $result_parts[3]), "Y-m-d");
-        if ($new_status != intval($open_case["ApplicationStatus"]))
-        {
-            echo "Email to: {$open_case["Email"]}, {$open_case["DOS_CaseId"]}"
-                . " from ".Enums::$enum_status[intval($open_case["ApplicationStatus"])]." to "
-                .Enums::$enum_status[$new_status].".\n";
-            // need to update the database first
-            $sql = "UPDATE `nocheck_cases` SET
-                    `ApplicationStatus`='{$new_status}',
-                    `ApplicationDate`='{$case_start_date}',
-                    `ClearanceDate`='{$case_end_date}'
-                WHERE
-                    `id`={$open_case["id"]}";
-            $udb->query($sql);
-            
-            // and then notify the user using email
+        // if the new status is an unknown status, record this exception in the database
+        if ($new_status == 0) {
+            log_unexpected_event($udb, "unknown visa status", $check_result);
+            // notify the admin
             $mail->ClearAddresses();
-            $mail->AddAddress($open_case["Email"]); // recipients email
-            $mail->Body    = sprintf($config_email_body, Enums::$enum_status[intval($open_case["ApplicationStatus"])],
-                    Enums::$enum_status[$new_status]);
+            $mail->AddAddress($config_email_username); // recipients email
+            $mail->Body    = "ALERT:unknown visa status:"+$open_case["DOS_CaseId"]+", "+$check_result;
 
             if(!$mail->Send())
-                echo "Mailer Error: " . $mail->ErrorInfo;
+                echo "Mailer Error: " . $mail->ErrorInfo."\n";
             else
-                echo "Message has been sent";
+                echo "Message has been sent!\n";
+            
+        }else{
+            $case_start_date = date_format(date_create_from_format("d-M-Y", $result_parts[2]), "Y-m-d");
+            $case_update_date = date_format(date_create_from_format("d-M-Y", $result_parts[3]), "Y-m-d");
+            if ($new_status != intval($open_case["ApplicationStatus"]))
+            {
+                echo "Email to: {$open_case["Email"]}, {$open_case["DOS_CaseId"]}"
+                    . " from ".Enums::$enum_status_name[intval($open_case["ApplicationStatus"])]." to "
+                    .Enums::$enum_status_name[$new_status].".\n";
+                // need to update the database first
+                // if the visa has been issued/rejected, also update the summary table
+                if ($new_status == 1 || $new_status == 3) {
+                    $sql = "UPDATE `nocheck_cases` SET
+                            `ApplicationStatus`='{$new_status}',
+                            `ApplicationDate`='{$case_start_date}',
+                            `ClearanceDate`='{$case_update_date}'
+                        WHERE
+                            `id`={$open_case["id"]}";
+                    $udb->query($sql);
+                }
+                // all the update events need to be recorded to case_update table
+                $sql = "INSERT INTO `nocheck_case_update`
+                        ( `id`, `dos_id`, `status_code`, `update_time`)
+                        VALUES (NULL, '{$open_case["DOS_CaseId"]}', '{$new_status}',
+                            '{$case_update_date}');";
+                $udb->query($sql);
+
+                // and then notify the user using email
+                $mail->ClearAddresses();
+                $mail->AddAddress($open_case["Email"]); // recipients email
+                $mail->Body    = sprintf($config_email_body, Enums::$enum_status_name[intval($open_case["ApplicationStatus"])],
+                        Enums::$enum_status_name[$new_status]);
+
+                if(!$mail->Send())
+                    echo "Mailer Error: " . $mail->ErrorInfo."\n";
+                else
+                    echo "Message has been sent!\n";
+            }
         }
     }else{
         // TODO: deal with unknown result

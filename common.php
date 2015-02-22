@@ -1,18 +1,15 @@
 <?php
 
-@define('NOCHECK', TRUE);
+define('NOCHECK', TRUE);
 //set_magic_quotes_runtime(0);
 define('FROOT', dirname(__FILE__).DIRECTORY_SEPARATOR);
 include_once(FROOT."common/functions.php");
 include_once(FROOT."common/types.php");
 include_once(FROOT."lib/db/mysql.inc.php");
 include_once(FROOT."config/config.php");
-@include_once(FROOT."config/config.private.php");
+include_once(FROOT."config/config.private.php");
 include_once(FROOT."config/lang.php");
-//include_once(FROOT."../member/config.php");
 
-//$ecms_userid = $cfg_ml->M_ID;
-//echo "--".$ecms_userid;
 
 date_default_timezone_set($config_server_timezone);
 
