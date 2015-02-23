@@ -220,7 +220,7 @@ class CaseOperation {
         if (substr(php_uname(), 0, 7) == "Windows"){
             $phantom_exe = $config_checker_path.DIRECTORY_SEPARATOR."phantomjs_win".DIRECTORY_SEPARATOR."phantomjs.exe";
         }else{
-            $phantom_exe = $config_checker_path.DIRECTORY_SEPARATOR."phantomjs_linux".DIRECTORY_SEPARATOR."phantomjs";
+            $phantom_exe = $config_checker_path.DIRECTORY_SEPARATOR."phantomjs_linux".DIRECTORY_SEPARATOR."bin".DIRECTORY_SEPARATOR."phantomjs";
         }
         
         // run the phantomjs exe to get the status of this case
