@@ -7,6 +7,7 @@ $config_database_username = "";
 $config_database_password = "";
 
 $config_checker_path = ".".DIRECTORY_SEPARATOR."visa_checker".DIRECTORY_SEPARATOR."visa_checker";
+$config_checker_options = "";
 
 // email related
 $config_email_username = "";

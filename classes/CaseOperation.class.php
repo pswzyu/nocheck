@@ -218,10 +218,12 @@ class CaseOperation {
     public function getCaseDOSStatus($ds160_id, $config_checker_path)
     {
         if (substr(php_uname(), 0, 7) == "Windows"){
-            $phantom_exe = $config_checker_path.DIRECTORY_SEPARATOR."phantomjs_win".DIRECTORY_SEPARATOR."phantomjs.exe";
+            $phantom_exe = $config_checker_path.DIRECTORY_SEPARATOR."phantomjs_win".DIRECTORY_SEPARATOR."phantomjs.exe ";
         }else{
-            $phantom_exe = $config_checker_path.DIRECTORY_SEPARATOR."phantomjs_linux".DIRECTORY_SEPARATOR."bin".DIRECTORY_SEPARATOR."phantomjs";
+            $phantom_exe = $config_checker_path.DIRECTORY_SEPARATOR."phantomjs_linux".DIRECTORY_SEPARATOR."bin".DIRECTORY_SEPARATOR."phantomjs ";
         }
+        
+        $phantom_exe = $phantom_exe." ".$config_checker_options." ";
         
         // run the phantomjs exe to get the status of this case
         exec($phantom_exe." ".$config_checker_path.DIRECTORY_SEPARATOR."check.js ".$ds160_id, $check_output);
