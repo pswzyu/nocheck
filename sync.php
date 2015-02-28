@@ -20,7 +20,6 @@
 include_once("./common/types.php");
 include_once("./common/functions.php");
 include_once("./lib/db/mysql.inc.php");
-include_once("./config/config.php");
 include_once("./common.php");
 
 $start_y = intval("2012");
@@ -350,7 +349,7 @@ $mail->From = $mail->Username;
 while ($open_case = $udb -> fetch_assoc($query_handle))
 {
     // get the status string
-    $check_result = $co->getCaseDOSStatus($open_case["DOS_CaseId"], $config_checker_path);
+    $check_result = $co->getCaseDOSStatus($open_case["DOS_CaseId"], $config_checker_path, $config_checker_options);
     
     $result_parts = explode(",", $check_result);
     
