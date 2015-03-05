@@ -31,5 +31,6 @@ print_r($co->getMaskedEmailAddress("a123456@gmail.com"));echo "<br/>";
  * 2. show masked email and ds160 in the detail page and update page
  */
 
+//~!@#$%^&*()_+`1234567890-=qwert  {}|[]\:";'<>?,./
 
 ?>

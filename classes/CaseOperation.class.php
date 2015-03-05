@@ -65,6 +65,10 @@ class CaseOperation {
         if (! v::int()->between(1,5,TRUE)->notEmpty()->validate($info["degree"]) ){
             $errors["degree"] = "Invalid degree!";
         }
+        // applied date
+        if (! v::date()->validate($info["applydate"]) ){
+            $errors["applydate"] = "Invalid application filed date!";
+        }
         return $errors;
     }
     
@@ -96,11 +100,11 @@ class CaseOperation {
         }
         // insert the detail of the case into case table
         $this->udb->query("INSERT INTO `nocheck`.`nocheck_cases`
-            (`id`, `Checkee_CaseId`, `Nickname`, `DOS_CaseId`, `Email`, `Password`,
+            (`id`, `RecordStatus`, `InfoStatus`, `Checkee_CaseId`, `Nickname`, `DOS_CaseId`, `Email`, `Password`,
             `ApplicationDate`, `ClearanceDate`, `VisaType`, `VisaEntry`,
             `Consulate`, `Major_old`, `ApplicationStatus`, `Note`, `LastName`,
             `FirstName`, `University`, `Degree`, `Employer`, `JobTitle`,
-            `YearsInUSA`, `Citizenship`) VALUES (NULL, NULL, NULL,
+            `YearsInUSA`, `Citizenship`) VALUES (NULL, 0, 0, NULL, NULL,
             '{$info["dos_id"]}', '{$info["email"]}', '{$info["password"]}', '{$info["applydate"]}', NULL,'{$info["visatype"]}',
             '{$info["visaentry"]}', '{$info["consulate"]}', '{$info["major"]}', 2, '{$info["note"]}',
             '{$info["lastname"]}', '{$info["firstname"]}', '{$info["university"]}','{$info["degree"]}',
@@ -141,12 +145,13 @@ class CaseOperation {
         }
         if ($exist["Password"] != $info["password"]) {
             // TODO: retrieve password page link
-            $this->error["password"] = "Password is wrong, you can retrieve your password from <a href=''>here</a>";
+            $this->error["password"] = "Password is wrong, you can retrieve your password from <a href='index.php?do=user&ac=ret_pwd'>here</a>";
             return -1;
         }
 
         // insert the detail of the case into case table
         $this->udb->query("UPDATE `nocheck`.`nocheck_cases` SET
+            `InfoStatus`='0',
             `DOS_CaseId`='{$info["dos_id"]}', `Email`='{$info["email"]}', `ApplicationDate`='{$info["applydate"]}',
             `ClearanceDate`='{$info["cleardate"]}', `VisaType`='{$info["visatype"]}', `VisaEntry`='{$info["visaentry"]}',
             `Consulate`='{$info["consulate"]}', `Major_old`='{$info["major"]}', `Note`='{$info["note"]}',
@@ -260,7 +265,7 @@ class CaseOperation {
      * input: the original email address
      * output: the masked(using *) address
      */
-    public function getMaskedEmailAddress($email)
+    public static function getMaskedEmailAddress($email)
     {
         $cut = 3;
         $result_parts = explode("@", $email);
@@ -278,7 +283,7 @@ class CaseOperation {
      * input: the original ds160 id
      * output: the masked(using *) ds160 id
      */
-    public function getMaskedDS160ID($dsid)
+    public static function getMaskedDS160ID($dsid)
     {
         $cut1 = 2;
         $cut2 = 3;

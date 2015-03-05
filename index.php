@@ -3,7 +3,7 @@
 include_once("./common.php");
 
 
-$dos = array("index", "case");
+$dos = array("index", "case", "user");
 
 $do = _SAFEGET("do");
 

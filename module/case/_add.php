@@ -10,6 +10,10 @@ require(__DIR__.DIRECTORY_SEPARATOR."../../common/protect.php");
 
 include_once(FROOT."classes/CaseOperation.class.php");
 
+include(FROOT."lib/php/simple-php-captcha/simple-php-captcha.php");
+
+session_start();
+
 // get the case information by caseid and then display it
 //$udb->query("SELECT * FROM `nocheck_cases` WHERE id=".$caseid);
 
@@ -41,23 +45,30 @@ $info["jobtitle"] = isset($_POST["jobtitle"])?$_POST["jobtitle"]:"";
 $info["applydate"] = isset($_POST["applydate"])?$_POST["applydate"]:date("Y-m-d");
 $info["note"] = isset($_POST["note"])?$_POST["note"]:"";
 
+$info["captcha"] = _SAFEPOST("captcha");
+
 $notify = "";
 $case_operator = new CaseOperation($udb);
 
 # check if the user has entered the information
 if (isset($_POST["submit"]))
 {    
-    $new_case_dbid = $case_operator->addCase($info);
-    
-    if ($new_case_dbid == -1)
-    {
-        $error_msg = $case_operator->getErrorMessage();
-        foreach( $error_msg as $fieldname => $content )
+    // first chech the captcha
+    if (strtolower($info["captcha"]) != strtolower($_SESSION['captcha']['code']) ) {
+        $notify = "<div class='error_msg'>Captcha check failed!</div>";
+    } else {
+        $new_case_dbid = $case_operator->addCase($info);
+
+        if ($new_case_dbid == -1)
         {
-            $notify .= "<div class='error_msg'>{$content}</div>";
+            $error_msg = $case_operator->getErrorMessage();
+            foreach( $error_msg as $fieldname => $content )
+            {
+                $notify .= "<div class='error_msg'>{$content}</div>";
+            }
+        }else{
+            $notify = "<div class='info_msg'>Added Successfully!</div>";
         }
-    }else{
-        $notify = "<div class='info_msg'>Added Successfully!</div>";
     }
     
     // since the data comes from html directly, we need to strip the slashes added in
@@ -66,7 +77,7 @@ if (isset($_POST["submit"]))
     
 }
 
-
+$_SESSION['captcha'] = simple_php_captcha();
 
 ?>
 
@@ -136,6 +147,9 @@ if (isset($_POST["submit"]))
             <tr><td>Note</td><td>
                 <textarea cols="50" rows="10" name="note"><?php echo $info["note"]; ?></textarea>
                 </td></tr>
+            
+            <tr><td>CAPTCHA</td><td><img src="<?php echo $_SESSION['captcha']['image_src']; ?>" /><br/>
+                <input name="captcha" /><span class="form_req">*</span></td></tr>
             
         </table>
         <input type="hidden" id="last_visatype" value="<?php echo $info["visatype"]; ?>"/>
