@@ -321,7 +321,6 @@ if ($ac == "ceac"){
 
 
 include_once __DIR__.DIRECTORY_SEPARATOR.'./classes/CaseOperation.class.php';
-include __DIR__.DIRECTORY_SEPARATOR."./lib/php/PHPMailer/PHPMailerAutoload.php";
 
 $sql = "SELECT * FROM `nocheck_cases` WHERE `ApplicationStatus`=2 AND (`DOS_CaseId` IS NOT NULL)";
 $query_handle = $udb->query($sql);
@@ -379,6 +378,7 @@ while ($open_case = $udb -> fetch_assoc($query_handle))
             }
         }elseif ($result_parts[1] == "Time limit exceeded!") {
             // tell the admin
+            $mail->Subject = "ALERT: visa checking error!";
             $mail->ClearAddresses();
             $mail->AddAddress($config_email_username); // recipients email
             $mail->Body    = "ALERT:visa checking took too much time:"+$open_case["DOS_CaseId"]+
@@ -396,6 +396,7 @@ while ($open_case = $udb -> fetch_assoc($query_handle))
         if ($new_status == 0) {
             log_unexpected_event($udb, "unknown visa status", $check_result);
             // notify the admin
+            $mail->Subject = "ALERT: visa checking error!";
             $mail->ClearAddresses();
             $mail->AddAddress($config_email_username); // recipients email
             $mail->Body    = "ALERT:unknown visa status:"+$open_case["DOS_CaseId"]+", "+$check_result;

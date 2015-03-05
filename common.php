@@ -10,6 +10,7 @@ include_once(FROOT."config/config.php");
 include_once(FROOT."config/config.private.php");
 include_once(FROOT."config/lang.php");
 
+include __DIR__.DIRECTORY_SEPARATOR."./lib/php/PHPMailer/PHPMailerAutoload.php";
 
 date_default_timezone_set($config_server_timezone);
 
@@ -47,6 +48,66 @@ set_error_handler(function ($errno, $errstr, $errfile, $errline, $errcontext){
     
     $udb->query("INSERT INTO `nocheck_errlog` (`id`, `errno`, `errstr`, `errfile`, `errline`, `errcontext`)
             VALUES( NULL, {$errno}, '{$errstr}', '{$errfile}', {$errline}, '{$errcontext}' )");    
+    
+});
+
+function format_error( $errno, $errstr, $errfile, $errline ) {
+    $trace = print_r( debug_backtrace( false ), true );
+
+    $content  = "<table><thead bgcolor='#c8c8c8'><th>Item</th><th>Description</th></thead><tbody>";
+    $content .= "<tr valign='top'><td><b>Error</b></td><td><pre>$errstr</pre></td></tr>";
+    $content .= "<tr valign='top'><td><b>Errno</b></td><td><pre>$errno</pre></td></tr>";
+    $content .= "<tr valign='top'><td><b>File</b></td><td>$errfile</td></tr>";
+    $content .= "<tr valign='top'><td><b>Line</b></td><td>$errline</td></tr>";
+    $content .= "<tr valign='top'><td><b>Trace</b></td><td><pre>$trace</pre></td></tr>";
+    $content .= '</tbody></table>';
+
+    return $content;
+}
+
+register_shutdown_function(function (){
+    
+    global $config_email_username, $config_email_password, $config_email_fromname;
+    // init the email backend
+    $mail = new PHPMailer();
+
+    // ---------- adjust these lines ---------------------------------------
+    $mail->Username = $config_email_username; // your GMail user name
+    $mail->Password = $config_email_password;
+    $mail->FromName = $config_email_fromname; // readable name
+
+    $mail->Subject = "ALERT:Fatal Error!";
+    //-----------------------------------------------------------------------
+
+    $mail->Host = "ssl://smtp.gmail.com"; // GMail
+    $mail->Port = 465;
+    $mail->IsSMTP(); // use SMTP
+    $mail->SMTPAuth = true; // turn on SMTP authentication
+    $mail->From = $mail->Username;
+    
+    $mail->ClearAddresses();
+    $mail->AddAddress($config_email_username); // recipients email
+    
+    $errfile = "unknown file";
+    $errstr  = "shutdown";
+    $errno   = E_CORE_ERROR;
+    $errline = 0;
+
+    $error = error_get_last();
+
+    if( $error !== NULL) {
+        $errno   = $error["type"];
+        $errfile = $error["file"];
+        $errline = $error["line"];
+        $errstr  = $error["message"];
+        
+        $mail->Body    = format_error( $errno, $errstr, $errfile, $errline);
+
+        if(!$mail->Send())
+            echo "Mailer Error: " . $mail->ErrorInfo."\n";
+        else
+            echo "Message has been sent!\n";
+    }
     
 });
 
