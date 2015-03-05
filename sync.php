@@ -29,12 +29,12 @@ $end_y = intval(date("Y"));
 $end_m = intval(date("m"));
 
 if (!isset($argv[1])){
-    die("Error: No action given!");
+    die("Error: No action given!\n");
 }
 $ac = $argv[1];
 $acs = array("checkee", "ceac");
 if(empty($ac) || !in_array($ac, $acs)) {
-    die("Error: Invalid action!");
+    die("Error: Invalid action!\n");
 }
 
 

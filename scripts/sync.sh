@@ -10,7 +10,7 @@ if [ -f "$TMP_DIR/$1.lock" ]; then
 else
 	touch $TMP_DIR/$1.lock
 	echo "######`date`##### 上次已完成--" >> $TMP_DIR/$1.log
-	php $ROOT_DIR/sync.php $1
+	php $ROOT_DIR/sync.php $1 >> $TMP_DIR/$1.log
 	echo "--$?--" >> $TMP_DIR/$1.log
 	rm $TMP_DIR/$1.lock
 fi
