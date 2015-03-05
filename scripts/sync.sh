@@ -10,6 +10,6 @@ else
 	echo "######`date`##### 上次已完成--" >> $TMP_DIR/$1.log
 	php $ROOT_DIR/sync.php $1
 	echo "--$?--" >> $TMP_DIR/$1.log
-	rm $REPO_SYNC/$1.lock
+	rm $TMP_DIR/$1.lock
 fi
 
