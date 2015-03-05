@@ -3,6 +3,8 @@
 TMP_DIR=/var/www/html/nocheck/scripts
 ROOT_DIR=/var/www/html/nocheck
 
+cd $ROOT_DIR
+
 if [ -f "$TMP_DIR/$1.lock" ]; then
 	echo "######`date`##### 上次未完成--" >> $TMP_DIR/$1.log
 else
