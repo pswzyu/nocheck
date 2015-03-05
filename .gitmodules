@@ -4,6 +4,6 @@
 [submodule "lib/php/PHPMailer"]
 	path = lib/php/PHPMailer
 	url = https://github.com/PHPMailer/PHPMailer.git
-[submodule "lib\\php\\simple-php-captcha"]
-	path = lib\\php\\simple-php-captcha
+[submodule "lib/php/simple-php-captcha"]
+	path = lib/php/simple-php-captcha
 	url = https://github.com/claviska/simple-php-captcha.git
