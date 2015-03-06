@@ -467,6 +467,8 @@ while ($open_case = $udb -> fetch_assoc($query_handle))
                     echo "Mailer Error: " . $mail->ErrorInfo."\n";
                 else
                     echo "Message has been sent!\n";
+            }else{
+                echo "Case ".$open_case["DOS_CaseId"].": No change.\n";
             }
         }
     }else{
