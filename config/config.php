@@ -11,7 +11,7 @@ $config_checker_options = "";
 
 // email related
 $config_email_username = "issuemyvisatoday@gmail.com";
-$config_email_password = "1.6726231"; 
+$config_email_password = ""; 
 $config_email_fromname = "issuemyvisa.today"; // readable name
 $config_email_subject = "Your visa status is updated!";
 $config_email_body    = "Hi,\n There is a update on your case %s, go check it out!\n Status has been changed from "
