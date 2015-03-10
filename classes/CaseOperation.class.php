@@ -99,7 +99,7 @@ class CaseOperation {
             return -1;
         }
         // insert the detail of the case into case table
-        $this->udb->query("INSERT INTO `nocheck`.`nocheck_cases`
+        $query_handle = $this->udb->query("INSERT INTO `nocheck`.`nocheck_cases`
             (`id`, `RecordStatus`, `InfoStatus`, `Checkee_CaseId`, `Nickname`, `DOS_CaseId`, `Email`, `Password`,
             `ApplicationDate`, `ClearanceDate`, `VisaType`, `VisaEntry`,
             `Consulate`, `Major_old`, `ApplicationStatus`, `Note`, `LastName`,
@@ -114,8 +114,21 @@ class CaseOperation {
             $this->udb->error["Unknown"] = "Fatal error: error when recording case detail!";
             return -1;
         }
+        
+        // get the id we just inserted
+        $last_id = $this->udb->inserted_id();
+        
+        // record the time that user add this case
+        $this->udb->query("INSERT INTO `nocheck_case_update`
+            (`id`, `case_id`, `dos_id`, `status_code`, `update_time`) VALUES
+            (NULL, {$last_id}, '{$info["dos_id"]}', 101, NOW() )");
+        if ($this->udb->get_error_no())
+        {
+            $this->udb->error["Unknown"] = "Fatal error: error when recording case detail!";
+            return -1;
+        }
 
-        return $this->udb->inserted_id();
+        return $last_id;
     }
     
     /*
