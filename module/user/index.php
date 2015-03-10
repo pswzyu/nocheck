@@ -68,6 +68,7 @@ if ($ac == "ret_pwd"){
                         <div><input type="submit" name="submit_type" value="Go" <?php ?> /></div>
                     </form>-->
                 </div>
+                <div class="clear_all"></div>
                 
             </div>
             <div id="main_content">

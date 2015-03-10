@@ -137,10 +137,12 @@ if ($ac == "viewall")
                     <form action="index.php" method="get">
                         <input type="hidden" name="do" value="index"/>
                         <input type="hidden" name="ac" value="email"/>
-                        <div><input type="text" name="email" <?php if(isset($pg_email)){ echo "value='{$pg_email}'"; } ?> /></div>
+                        <div><input type="text" name="email" <?php if(isset($pg_email)){
+                            echo "value=\"".sstripslashes($pg_email)."\""; } ?> /></div>
                         <div><input type="submit" name="submit_type" value="Go" /></div>
                     </form>
                 </div>
+                <div class="clear_all"></div>
             </div>
             <div id="main_content">
 		<?php

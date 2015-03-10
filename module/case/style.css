@@ -1,40 +1,7 @@
 @CHARSET "UTF-8";
 
-
 #right_tab .tab_title {
-    border: solid 1px yellow;
     float: left;
     width: 33%;
     height: 100px;
-}
-.tab_highlight {
-    background-color: #70A070;
-}
-table{
-	border-collapse : collapse;
-        margin: 10px;
-}
-td,th{
-	padding: 5px;
-}
-
-#main_content {
-	clear: both;
-	
-	border: solid 1px yellow;
-}
-
-#paging {
-    padding-top: 10px;
-}
-#paging div {
-    float: left;
-    padding-left: 10px;
-}
-.page_highlight {
-    background-color: #70A070;
-}
-
-.form_req {
-    color: red;
 }

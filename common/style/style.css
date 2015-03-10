@@ -1,3 +1,5 @@
+@CHARSET "UTF-8";
+
 #container_all{
 	margin: 0px auto;
 	max-width: 1440px;
@@ -15,16 +17,18 @@
 #right_div{
 	float: left;
 	width: 80%;
-	
 }
-.info {
-	background: green;
+.info_msg {
+    margin: 30px 0px;
+	border: solid 2px green;
 }
-.alert {
-	background: yellow;
+.warn_msg {
+    margin: 30px 0px;
+	border: solid 2px yellow;
 }
-.warn {
-	background: red;
+.error_msg {
+    margin: 30px 0px;
+	border: solid 2px red;
 }
 .large_text {
 	font-size: 30px;
@@ -44,3 +48,42 @@ table {
 	padding: 3px;
 	white-space: nowrap;
 }
+
+/********************STYLES INSIDE THE PAGE*******************/
+
+#right_tab {
+    border-bottom: 2px solid #000080;
+    margin-bottom: 20px;
+}
+
+.tab_highlight {
+    background-color: #70A070;
+}
+table{
+	border-collapse : collapse;
+}
+td,th{
+	padding: 5px;
+}
+
+#main_content {
+	clear: both;
+	
+}
+
+#paging {
+    padding-top: 10px;
+}
+#paging div {
+    float: left;
+    padding-left: 10px;
+}
+.page_highlight {
+    background-color: #70A070;
+}
+
+.form_req {
+    color: red;
+}
+
+

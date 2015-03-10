@@ -94,6 +94,7 @@ if ($ac == "add"){
                         <div><input type="submit" name="submit_type" value="Go" /></div>
                     </form>
                 </div>
+                <div class="clear_all"></div>
             </div>
             <div id="main_content">
 		<?php
