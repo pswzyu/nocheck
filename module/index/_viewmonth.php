@@ -29,10 +29,15 @@ while ($one_data = $udb -> fetch_assoc($query_handle))
     $nof_record ++;
     if ($nof_record > $page_start && $nof_record <= $page_start+$pagesize)
     {
+        $ap_date = explode(" ", $one_data["ApplicationDate"]);
+        $cl_date = explode(" ", $one_data["ClearanceDate"]);
+        $one_data["ApplicationDate"] = $ap_date[0];
+        $one_data["ClearanceDate"] = $cl_date[0];
         $all_data[] = $one_data;
     }
     $type_count[intval($one_data["ApplicationStatus"])] += 1;
     $wait_time = empty($one_data["wait"])?0:intval($one_data["wait"]);
+    if ($wait_time < 0) $wait_time = 0;
     // only consider the cleared case
     if ( intval($one_data["ApplicationStatus"]) == 1 )
     {

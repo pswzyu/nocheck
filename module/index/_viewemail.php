@@ -34,6 +34,10 @@ if ($pg_email == NULL || $pg_email == "")
         $nof_record ++;
         if ($nof_record > $page_start && $nof_record <= $page_start+$pagesize)
         {
+            $ap_date = explode(" ", $one_data["ApplicationDate"]);
+            $cl_date = explode(" ", $one_data["ClearanceDate"]);
+            $one_data["ApplicationDate"] = $ap_date[0];
+            $one_data["ClearanceDate"] = $cl_date[0];
             $all_data[] = $one_data;
         }
         $type_count[intval($one_data["ApplicationStatus"])] += 1;
