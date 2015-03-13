@@ -33,7 +33,7 @@ if ($ac == "ret_pwd"){
 <html>
 <head>
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-    <link rel="stylesheet" type="text/css" href="common/style/style.css" />
+    <link rel="stylesheet" type="text/css" href="module/common/style/style.css" />
     <link rel="stylesheet" type="text/css" href="module/case/style.css" />
     <script type="text/javascript" src="lib/js/jquery-2.1.1.min.js"></script>
     <link rel="stylesheet" type="text/css" href="lib/js/datepicker/jquery.datepick.css">

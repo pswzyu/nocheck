@@ -52,12 +52,22 @@ table {
 /********************STYLES INSIDE THE PAGE*******************/
 
 #right_tab {
+    margin: 20px 0px;
+}
+
+.tab_title {
+    float: left;
+    width: 22%;
+    height: 90px;
+    padding: 10px 0px 0px 2%;
     border-bottom: 2px solid #000080;
-    margin-bottom: 20px;
+    background-image: url(../img/tab_no_focus.jpg);
+    background-size: 100% 100%;
 }
 
 .tab_highlight {
-    background-color: #70A070;
+    border-bottom: none!important;
+    background-image: url(../img/tab_selected.jpg)!important;
 }
 table{
 	border-collapse : collapse;
