@@ -415,15 +415,19 @@ while ($open_case = $udb -> fetch_assoc($query_handle))
         }else{
             // get the last update time
             $query_handle_last_update = $udb->query("SELECT DATE(`update_time`) FROM `nocheck_case_update`
-                WHERE `case_id`={$open_case["id"]} ORDER BY `update_time` DESC;");
+                WHERE `status_code`<100 and `case_id`={$open_case["id"]} ORDER BY `update_time` DESC;");
                 
             $last_update_date = $udb->fetch_assoc($query_handle_last_update);
             $udb->free_result($query_handle_last_update);
+            if ($last_update_date) {
+                $last_update_date = $last_update_date["DATE(`update_time`)"];
+            }
             
             $case_start_date = date_format(date_create_from_format("d-M-Y", $result_parts[2]), "Y-m-d");
             $case_update_date = date_format(date_create_from_format("d-M-Y", $result_parts[3]), "Y-m-d");
             // if the update date changeg or the status changed
-            if ( ($last_update_date && $case_update_date." 00:00:00" != $last_update_date) ||
+            
+            if ( ($last_update_date && $case_update_date != $last_update_date) ||
                     ($new_status != intval($open_case["ApplicationStatus"])) )
             {
                 echo "Email to: {$open_case["Email"]}, {$open_case["DOS_CaseId"]}"
@@ -441,7 +445,7 @@ while ($open_case = $udb -> fetch_assoc($query_handle))
                     $udb->query($sql);
                 }
                 // the suspected reject case send email to admin
-                if ( $new_status == 1 && $new_status == intval($open_case["ApplicationStatus"]) ) {
+                /*if ( $new_status == 2 && $new_status == intval($open_case["ApplicationStatus"]) ) {
                     echo "Suspected rejected case!\n";
                     log_unexpected_event($udb, "rejected", "dosid:".$open_case["DOS_CaseId"].",case_id:".$open_case["id"]);
                     $mail->ClearAddresses();
@@ -455,7 +459,7 @@ while ($open_case = $udb -> fetch_assoc($query_handle))
                         echo "Message has been sent!\n";
                     else
                         echo "Mailer Error: " . $mail->ErrorInfo."\n";
-                }
+                }*/
                 
                 // all the update events need to be recorded to case_update table
                 $sql = "INSERT INTO `nocheck_case_update`
@@ -469,7 +473,7 @@ while ($open_case = $udb -> fetch_assoc($query_handle))
                 $mail->AddAddress($open_case["Email"]); // recipients email
                 $mail->Body    = sprintf($config_email_body, $open_case["DOS_CaseId"],
                         Enums::$enum_status_name[intval($open_case["ApplicationStatus"])],
-                        Enums::$enum_status_name[$new_status]);
+                        Enums::$enum_status_name[$new_status], $case_update_date );
 
                 $send_result = $config_email_send ? $mail->Send() : FALSE;
                 

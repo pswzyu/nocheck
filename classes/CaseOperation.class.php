@@ -177,8 +177,18 @@ class CaseOperation {
             $this->udb->error["Unknown"] = "Fatal error: error when updating case detail!";
             return -1;
         }
+        
+        // record the time that user update this case
+        $this->udb->query("INSERT INTO `nocheck_case_update`
+            (`id`, `case_id`, `dos_id`, `status_code`, `update_time`) VALUES
+            (NULL, {$info["id"]}, '{$info["dos_id"]}', 102, NOW() )");
+        if ($this->udb->get_error_no())
+        {
+            $this->udb->error["Unknown"] = "Fatal error: error when recording case detail!";
+            return -1;
+        }
 
-        return $this->udb->inserted_id();
+        return 1;
     }
     
     
