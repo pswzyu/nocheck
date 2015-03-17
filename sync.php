@@ -364,10 +364,12 @@ while ($open_case = $udb -> fetch_assoc($query_handle))
                 $mail->AddAddress($open_case["Email"]); // recipients email
                 $mail->Body    = sprintf($config_email_error_body, $open_case["id"]);
 
-                if(!$mail->Send())
-                    echo "Mailer Error: " . $mail->ErrorInfo."\n";
-                else
+                $send_result = $config_email_send ? $mail->Send() : FALSE;
+                
+                if($send_result)
                     echo "Message has been sent!\n";
+                else
+                    echo "Mailer Error: " . $mail->ErrorInfo."\n";
                 
                 // record in the database that this record is not correct
                 $sql = "UPDATE `nocheck_cases` SET
@@ -384,10 +386,12 @@ while ($open_case = $udb -> fetch_assoc($query_handle))
             $mail->Body    = "ALERT:visa checking took too much time:"+$open_case["DOS_CaseId"]+
                     ", "+$check_result;
 
-            if(!$mail->Send())
-                echo "Mailer Error: " . $mail->ErrorInfo."\n";
-            else
+            $send_result = $config_email_send ? $mail->Send() : FALSE;
+                
+            if($send_result)
                 echo "Message has been sent!\n";
+            else
+                echo "Mailer Error: " . $mail->ErrorInfo."\n";
         }
     }elseif($result_parts[0] == "success"){
         // only email the user when status changes
@@ -401,10 +405,12 @@ while ($open_case = $udb -> fetch_assoc($query_handle))
             $mail->AddAddress($config_email_username); // recipients email
             $mail->Body    = "ALERT:unknown visa status:"+$open_case["DOS_CaseId"]+", "+$check_result;
 
-            if(!$mail->Send())
-                echo "Mailer Error: " . $mail->ErrorInfo."\n";
-            else
+            $send_result = $config_email_send ? $mail->Send() : FALSE;
+                
+            if($send_result)
                 echo "Message has been sent!\n";
+            else
+                echo "Mailer Error: " . $mail->ErrorInfo."\n";
             
         }else{
             // get the last update time
@@ -417,7 +423,7 @@ while ($open_case = $udb -> fetch_assoc($query_handle))
             $case_start_date = date_format(date_create_from_format("d-M-Y", $result_parts[2]), "Y-m-d");
             $case_update_date = date_format(date_create_from_format("d-M-Y", $result_parts[3]), "Y-m-d");
             // if the update date changeg or the status changed
-            if ( ($last_update_date && $case_update_date != $last_update_date) ||
+            if ( ($last_update_date && $case_update_date." 00:00:00" != $last_update_date) ||
                     ($new_status != intval($open_case["ApplicationStatus"])) )
             {
                 echo "Email to: {$open_case["Email"]}, {$open_case["DOS_CaseId"]}"
@@ -443,10 +449,12 @@ while ($open_case = $udb -> fetch_assoc($query_handle))
                     $mail->Body    = sprintf("ALERT:Suspected rejected case!"."dosid:".$open_case["DOS_CaseId"].
                             ",case_id:".$open_case["id"]);
 
-                    if(!$mail->Send())
-                        echo "Mailer Error: " . $mail->ErrorInfo."\n";
-                    else
+                    $send_result = $config_email_send ? $mail->Send() : FALSE;
+                
+                    if($send_result)
                         echo "Message has been sent!\n";
+                    else
+                        echo "Mailer Error: " . $mail->ErrorInfo."\n";
                 }
                 
                 // all the update events need to be recorded to case_update table
@@ -463,10 +471,12 @@ while ($open_case = $udb -> fetch_assoc($query_handle))
                         Enums::$enum_status_name[intval($open_case["ApplicationStatus"])],
                         Enums::$enum_status_name[$new_status]);
 
-                if(!$mail->Send())
-                    echo "Mailer Error: " . $mail->ErrorInfo."\n";
-                else
+                $send_result = $config_email_send ? $mail->Send() : FALSE;
+                
+                if($send_result)
                     echo "Message has been sent!\n";
+                else
+                    echo "Mailer Error: " . $mail->ErrorInfo."\n";
             }else{
                 echo "Case ".$open_case["DOS_CaseId"].": No change.\n";
             }

@@ -280,6 +280,9 @@ class CaseOperation {
      */
     public static function getMaskedEmailAddress($email)
     {
+        if (!strpos($email, "@")) {
+            return $email;
+        }
         $cut = 3;
         $result_parts = explode("@", $email);
         if (strlen($result_parts[0]) > $cut) {

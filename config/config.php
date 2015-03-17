@@ -19,3 +19,7 @@ $config_email_body    = "Hi,\n There is a update on your case %s, go check it ou
 $config_email_error_body = "Hi,\n The DS-160 Case ID you entered in issuemyvisa.today may be incorrect. You can modify"
                     . " your case information at http://issuemyvisa.today/nocheck/index.php?do=case&ac=update&id=%d";
 
+$config_email_send = FALSE;
+
+
+
