@@ -46,6 +46,12 @@ if ($ac == "add"){
     <link rel="stylesheet" type="text/css" href="module/common/style/style.css" />
     <link rel="stylesheet" type="text/css" href="module/case/style.css" />
     <script type="text/javascript" src="lib/js/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="lib/js/jquery-ui-1.11.4/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="lib/js/functions.js"></script>
+    <script type="text/javascript" src="lib/js/academic_majors.js"></script>
+    <link rel="stylesheet" type="text/css" href="lib/js/jquery-ui-1.11.4/jquery-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="lib/js/jquery-ui-1.11.4/jquery-ui.theme.min.css" />
+    
     <link rel="stylesheet" type="text/css" href="lib/js/datepicker/jquery.datepick.css">
     <script type="text/javascript" src="lib/js/datepicker/jquery.plugin.js"></script>
     <script type="text/javascript" src="lib/js/datepicker/jquery.datepick.js"></script>
@@ -63,6 +69,12 @@ if ($ac == "add"){
             if (num_consulate) jQuery(jQuery("#sel_consulate option")[num_consulate]).attr("selected","selected");
             var num_degree = jQuery("#last_degree").attr("value");
             if (num_degree) jQuery(jQuery("#sel_degree option")[num_degree]).attr("selected","selected");
+            
+            // check what action are we doing
+            var ac = getURLParameter("ac");
+            if (ac === "add" || ac === "update") {
+                jQuery( "#ac_major" ).autocomplete({source: academic_majors});
+            }
         });
     </script>
 </head>

@@ -119,8 +119,8 @@ if (isset($_POST["submit"]))
                         <option value="3">MS</option><option value="4">Ph.D</option>
                         <option value="5">Others</option>
                     </select><span class="form_req">*</span></td></tr>
-            <tr><td>Major</td><td><input type="text" name="major"
-                                         value="<?php echo $info["major"]; ?>"></td></tr>
+            <tr><td>Major</td><td><input id="ac_major" type="text" name="major" value="<?php echo $info["major"]; ?>">
+                    </td></tr>
             <tr><td>Employer</td><td><input type="text" name="employer"
                                             value="<?php echo $info["employer"]; ?>"></td></tr>
             <tr><td>Job Title</td><td><input type="text" name="jobtitle"
