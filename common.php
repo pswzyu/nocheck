@@ -10,7 +10,7 @@ include_once(FROOT."config/config.php");
 include_once(FROOT."config/config.private.php");
 include_once(FROOT."config/lang.php");
 
-include __DIR__.DIRECTORY_SEPARATOR."./lib/php/PHPMailer/PHPMailerAutoload.php";
+include_once __DIR__.DIRECTORY_SEPARATOR."./lib/php/PHPMailer/PHPMailerAutoload.php";
 
 date_default_timezone_set($config_server_timezone);
 
@@ -29,7 +29,7 @@ spl_autoload_register(function ($class_name){
             }
         }
         $filepath .= ".php";
-        include (FROOT.'lib/php/Validation/library/'.$filepath);
+        include_once (FROOT.'lib/php/Validation/library/'.$filepath);
     }
 });
 

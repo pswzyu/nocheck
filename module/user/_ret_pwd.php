@@ -50,8 +50,6 @@ if (isset($_POST["submit"]))
             $notify = "<div class='error_msg'>No such Email and DS160 combination!</div>";
         }else{
 
-            include FROOT."./lib/php/PHPMailer/PHPMailerAutoload.php";
-
             // init the email backend
             $mail = new PHPMailer();
 

@@ -7,6 +7,8 @@
  */
 require(__DIR__.DIRECTORY_SEPARATOR."../../common/protect.php");
 
+include(FROOT."classes/CaseOperation.class.php");
+
 $pagesize = 10;
 
 
@@ -33,6 +35,9 @@ while ($one_data = $udb -> fetch_assoc($query_handle))
         $cl_date = explode(" ", $one_data["ClearanceDate"]);
         $one_data["ApplicationDate"] = $ap_date[0];
         $one_data["ClearanceDate"] = $cl_date[0];
+        if ($one_data["Nickname"] == "") {
+            $one_data["Nickname"] = CaseOperation::getMaskedDS160ID($one_data["DOS_CaseId"]);
+        }
         $all_data[] = $one_data;
     }
     $type_count[intval($one_data["ApplicationStatus"])] += 1;
