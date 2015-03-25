@@ -17,6 +17,16 @@ $table = $udb->fetch_assoc($query_handle);
 
 $udb->free_result($query_handle);
 
+// get the update history of this case
+$query_handle = $udb->query("SELECT * FROM `nocheck_case_update` WHERE case_id={$caseid}
+    ORDER BY `update_time` DESC");
+
+$updates = array();
+while ($one_update = $udb->fetch_assoc($query_handle)) {
+    $updates[] = array("time"=>$one_update["update_time"], "event"=>
+        CaseOperation::convertStatusCodeToName($one_update["status_code"]));
+}
+
 $VisaType = Enums::$enum_visatype[$table["VisaType"]];
 $VisaEntry = Enums::$enum_visaentry[$table["VisaEntry"]];
 $Consulate = Enums::$enum_consulate[$table["Consulate"]];
@@ -41,60 +51,75 @@ if ($table["Email"]) {
 ?>
 
 <div id="main_table" >
-    <table border="1">
-        <tr><th>DS-160 Case ID</th><th>Email</th><th>Nickname</th><th>First Name</th><th>Last Name</th>
-        </tr>
-        <?php
-            echo "<tr>
-                <td>{$table["DOS_CaseId"]}</td><td>{$table["Email"]}</td><td>{$table["Nickname"]}</td>
-                <td>{$table["FirstName"]}</td><td>{$table["LastName"]}</td>
-            </tr>";
-        ?>
-    </table>
+    <div>
+        <h4>Basic Info</h4>
+        <table border="1">
+            <tr><th>DS-160 Case ID</th><th>Email</th><th>Nickname</th><th>First Name</th><th>Last Name</th>
+            </tr>
+            <?php
+                echo "<tr>
+                    <td>{$table["DOS_CaseId"]}</td><td>{$table["Email"]}</td><td>{$table["Nickname"]}</td>
+                    <td>{$table["FirstName"]}</td><td>{$table["LastName"]}</td>
+                </tr>";
+            ?>
+        </table>
+
+        <table border="1">
+            <tr><th>Visa Type</th><th>Visa Entry</th><th>US Consulate</th><th>Years In USA</th>
+                <th>Citizenship</th>
+            </tr>
+            <?php
+                echo "<tr>
+                    <td>{$VisaType}</td><td>{$VisaEntry}</td>
+                    <td>{$Consulate}</td><td>{$table["YearsInUSA"]}</td>
+                    <td>{$table["Citizenship"]}</td>
+                </tr>";
+            ?>
+        </table>
+
+        <table border="1">
+            <tr><th>University(College)</th><th>Degree</th><th>Major</th><th>Employer</th>
+                <th>Job Title</th>
+            </tr>
+            <?php
+                echo "<tr>
+                    <td>{$table["University"]}</td><td>{$Degree}</td>
+                    <td>{$table["Major_old"]}</td><td>{$table["Employer"]}</td>
+                    <td>{$table["JobTitle"]}</td>
+                </tr>";
+            ?>
+        </table>
+
+        <table border="1">
+            <tr><th>Visa Status</th><th>Apply Date</th><th>Issued Data</th>
+            </tr>
+            <?php
+                echo "<tr>
+                    <td>{$ApplicationStatus}</td><td>{$table["ApplicationDate"]}</td>
+                    <td>{$table["ClearanceDate"]}</td>
+                </tr>";
+            ?>
+        </table>
+
+        <table border="1">
+            <tr><th>Note</th></tr>
+            <?php
+                echo "<tr><td>{$table["Note"]}</td></tr>";
+            ?>
+        </table>
+    </div>
     
-    <table border="1">
-        <tr><th>Visa Type</th><th>Visa Entry</th><th>US Consulate</th><th>Years In USA</th>
-            <th>Citizenship</th>
-        </tr>
-        <?php
-            echo "<tr>
-                <td>{$VisaType}</td><td>{$VisaEntry}</td>
-                <td>{$Consulate}</td><td>{$table["YearsInUSA"]}</td>
-                <td>{$table["Citizenship"]}</td>
-            </tr>";
-        ?>
-    </table>
-    
-    <table border="1">
-        <tr><th>University(College)</th><th>Degree</th><th>Major</th><th>Employer</th>
-            <th>Job Title</th>
-        </tr>
-        <?php
-            echo "<tr>
-                <td>{$table["University"]}</td><td>{$Degree}</td>
-                <td>{$table["Major_old"]}</td><td>{$table["Employer"]}</td>
-                <td>{$table["JobTitle"]}</td>
-            </tr>";
-        ?>
-    </table>
-    
-    <table border="1">
-        <tr><th>Visa Status</th><th>Apply Date</th><th>Issued Data</th>
-        </tr>
-        <?php
-            echo "<tr>
-                <td>{$ApplicationStatus}</td><td>{$table["ApplicationDate"]}</td>
-                <td>{$table["ClearanceDate"]}</td>
-            </tr>";
-        ?>
-    </table>
-    
-    <table border="1">
-        <tr><th>Note</th></tr>
-        <?php
-            echo "<tr><td>{$table["Note"]}</td></tr>";
-        ?>
-    </table>
+    <div>
+        <h4>Update History</h4>
+        <table border="1">
+            <tr><th>Date</th><th>Action</th></tr>
+            <?php
+                foreach ($updates as $event){
+                    echo "<tr><td>{$event["time"]}</td><td>{$event["event"]}</td></tr>";
+                }
+            ?>
+        </table>
+    </div>
     
 </div>
 

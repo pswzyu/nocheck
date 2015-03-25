@@ -266,7 +266,7 @@ class CaseOperation {
      * return value: 0 for unknown status, 1 for clear, 2 for pending, 3 for rejected
      * TODO: what's the status name for reject???
      */
-    public function convertStatusNameToCode($status_name)
+    public static function convertStatusNameToCode($status_name)
     {
         if ($status_name == "No Status") { // just created the ds160 form
             return 5;
@@ -278,6 +278,31 @@ class CaseOperation {
             return 1;
         }else{
             return 0;
+        }
+    }
+    
+    /*
+     * this function converts the case status code to readable names
+     */
+    public static function convertStatusCodeToName($status_code)
+    {
+        switch ($status_code){
+            case 1:
+                return "Issued";
+            case 2:
+                return "Administrative Processing";
+            case 3:
+                return "Rejected";
+            case 4:
+                return "Ready";
+            case 5:
+                return "No Status";
+            case 101:
+                return "User Added Case";
+            case 102:
+                return "User Modified Case";
+            default:
+                return NULL;
         }
     }
     
