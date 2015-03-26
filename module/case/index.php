@@ -2,6 +2,8 @@
 
 require(__DIR__.DIRECTORY_SEPARATOR."../../common/protect.php");
 
+ob_start();
+
 // 建立一个传参的数组
 $menubar_para = array();
 $menubar_para["is_admin"] = FALSE;
