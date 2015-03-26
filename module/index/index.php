@@ -116,7 +116,7 @@ if ($ac == "viewall")
                         <input type="hidden" name="ac" value="type"/>
                         <div><select name="status">
                                 <option <?php if(isset($pg_status)&&$pg_status==1){ echo "selected='selected'";}?> value="1">Clear</option>
-                                <!---<option value="2">Pending</option>--->
+                                <!--<option value="2">Pending</option>-->
                                 <option <?php if(isset($pg_status)&&$pg_status==3){ echo "selected='selected'";}?> value="3">Reject</option>
                             </select>
                             <a>Cases</a><br/>

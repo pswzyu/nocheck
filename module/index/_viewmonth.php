@@ -85,7 +85,11 @@ $udb -> free_result($query_handle);
         <?php
         for ( $step = 0; $step != count($all_data); $step ++ )
         {
-            echo "<tr><td><a href='index.php?do=case&ac=update&id={$all_data[$step]["id"]}'>Update</a></td>"
+            $status_class = "";
+            if ($all_data[$step]["ApplicationStatus"] == 1){
+                $status_class = "app_status_issued";
+            }
+            echo "<tr class={$status_class}><td><a href='index.php?do=case&ac=update&id={$all_data[$step]["id"]}'>Update</a></td>"
             . "<td>{$all_data[$step]["Nickname"]}</td>"
             . "<td>{$enum_visatype[$all_data[$step]["VisaType"]]}</td>"
             . "<td>{$enum_consulate[$all_data[$step]["Consulate"]]}</td>"
