@@ -17,11 +17,19 @@ use Respect\Validation\Validator as v;
 
 class CaseOperation {
     //put your code here
+    
     private $udb;
     private $error;
+    
+    var $majors_array;
+    var $careers_array;
+    
     function __construct($db_con)
     {
         $this->udb = $db_con;
+        include(FROOT.'lib/php/majors_and_careers.php');
+        $this->majors_array = unserialize($majors_string);
+        $this->careers_array = unserialize($careers_string);
     }
     
     public function getErrorMessage()
@@ -52,6 +60,22 @@ class CaseOperation {
         // visa type
         if (! v::int()->between(1,10,TRUE)->notEmpty()->validate($info["visatype"]) ){
             $errors["visatype"] = "Invalid visa type!";
+        }else{
+            // validate the major/career
+            $sel_value = intval($info["visatype"]);
+            if ($sel_value == 1 || $sel_value == 2) { // f
+                $errors = array_merge($errors, $this->validateFormFAndJ($info));
+            }else if ($sel_value == 3 || $sel_value == 4) { // h
+                $errors = array_merge($errors, $this->validateFormHAndL($info));
+            }else if ($sel_value == 5 || $sel_value == 6) { // j
+                $errors = array_merge($errors, $this->validateFormFAndJ($info));
+            }else if ($sel_value == 7 || $sel_value == 8) { // b
+
+            }else if ($sel_value == 9 || $sel_value == 10) { // l
+                $errors = array_merge($errors, $this->validateFormHAndL($info));
+            }else{ // value is 0 and other
+
+            }
         }
         // visa entry
         if (! v::int()->between(1,2,TRUE)->notEmpty()->validate($info["visaentry"]) ){
@@ -61,13 +85,40 @@ class CaseOperation {
         if (! v::int()->between(1,19,TRUE)->notEmpty()->validate($info["consulate"]) ){
             $errors["consulate"] = "Invalid consulate!";
         }
+        // applied date
+        if (! v::date()->notEmpty()->validate($info["applydate"]) ){
+            $errors["applydate"] = "Invalid application filed date!";
+        }
+        
+        return $errors;
+    }
+    private function validateFormFAndJ($info) {
+        $errors = array();
+        // university
+        if (! v::notEmpty()->validate($info["university"]) ){
+            $errors["university"] = "Invalid university name!";
+        }
         // degree
         if (! v::int()->between(1,5,TRUE)->notEmpty()->validate($info["degree"]) ){
             $errors["degree"] = "Invalid degree!";
         }
-        // applied date
-        if (! v::date()->validate($info["applydate"]) ){
-            $errors["applydate"] = "Invalid application filed date!";
+        // major
+        if (! v::notEmpty()->validate($info["major"]) ||
+                ! in_array($info["major"], $this->majors_array)) {
+            $errors["major"] = "Invalid major!";
+        }
+        return $errors;
+    }
+    private function validateFormHAndL($info) {
+        $errors = array();
+        // employer
+        if (! v::notEmpty()->validate($info["employer"]) ){
+            $errors["employer"] = "Invalid employer!";
+        }
+        // jobtitle
+        if ( (!v::notEmpty()->validate($info["jobtitle"])) ||
+                (!in_array($info["jobtitle"], $this->careers_array)) ) {
+            $errors["jobtitle"] = "Invalid jobtitle!";
         }
         return $errors;
     }
@@ -137,7 +188,7 @@ class CaseOperation {
      * This function return 1 if succeeded.
      * return -1 if failed
      */
-    public function updateCase($info)
+    public function updateCase(&$info)
     {
         $this->error = $this->validateForm($info);
         
@@ -160,6 +211,13 @@ class CaseOperation {
             // TODO: retrieve password page link
             $this->error["password"] = "Password is wrong, you can retrieve your password from <a href='index.php?do=user&ac=ret_pwd'>here</a>";
             return -1;
+        }       
+        // recover the original email and ds160 number
+        if ($info["dos_id"] == "NoChangeHere") {
+            $info["dos_id"] = $exist["DOS_CaseId"];
+        }
+        if ($info["email"] == "NoChange@Here.com") {
+            $info["email"] = $exist["Email"];
         }
 
         // insert the detail of the case into case table

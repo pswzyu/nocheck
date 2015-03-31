@@ -50,7 +50,7 @@ if ($ac == "add"){
     <script type="text/javascript" src="lib/js/jquery-2.1.1.min.js"></script>
     <script type="text/javascript" src="lib/js/jquery-ui-1.11.4/jquery-ui.min.js"></script>
     <script type="text/javascript" src="lib/js/functions.js"></script>
-    <script type="text/javascript" src="lib/js/academic_majors.js"></script>
+    <script type="text/javascript" src="lib/js/majors_and_careers.js"></script>
     <link rel="stylesheet" type="text/css" href="lib/js/jquery-ui-1.11.4/jquery-ui.min.css" />
     <link rel="stylesheet" type="text/css" href="lib/js/jquery-ui-1.11.4/jquery-ui.theme.min.css" />
     
@@ -59,23 +59,52 @@ if ($ac == "add"){
     <script type="text/javascript" src="lib/js/datepicker/jquery.datepick.js"></script>
     <script type="text/javascript">
         jQuery(document).ready(function(){
-            // initialize the date picker
-            jQuery("#dp_applydate").datepick({dateFormat: 'yyyy-mm-dd'});
-            jQuery("#dp_cleardate").datepick({dateFormat: 'yyyy-mm-dd'});
-            // restore the last state (the last user submit information)
-            var num_visatype = jQuery("#last_visatype").attr("value");
-            if (num_visatype) jQuery(jQuery("#sel_visatype option")[num_visatype]).attr("selected","selected");
-            var num_visaentry = jQuery("#last_visaentry").attr("value");
-            if (num_visaentry) jQuery(jQuery("#sel_visaentry option")[num_visaentry]).attr("selected","selected");
-            var num_consulate = jQuery("#last_consulate").attr("value");
-            if (num_consulate) jQuery(jQuery("#sel_consulate option")[num_consulate]).attr("selected","selected");
-            var num_degree = jQuery("#last_degree").attr("value");
-            if (num_degree) jQuery(jQuery("#sel_degree option")[num_degree]).attr("selected","selected");
-            
             // check what action are we doing
             var ac = getURLParameter("ac");
             if (ac === "add" || ac === "update") {
-                jQuery( "#ac_major" ).autocomplete({source: academic_majors});
+                
+                // initialize the date picker
+                jQuery("#dp_applydate").datepick({dateFormat: 'yyyy-mm-dd'});
+                jQuery("#dp_cleardate").datepick({dateFormat: 'yyyy-mm-dd'});
+                // restore the last state (the last user submit information)
+                var num_visatype = jQuery("#last_visatype").attr("value");
+                if (num_visatype) jQuery(jQuery("#sel_visatype option")[num_visatype]).attr("selected","selected");
+                var num_visaentry = jQuery("#last_visaentry").attr("value");
+                if (num_visaentry) jQuery(jQuery("#sel_visaentry option")[num_visaentry]).attr("selected","selected");
+                var num_consulate = jQuery("#last_consulate").attr("value");
+                if (num_consulate) jQuery(jQuery("#sel_consulate option")[num_consulate]).attr("selected","selected");
+                var num_degree = jQuery("#last_degree").attr("value");
+                if (num_degree) jQuery(jQuery("#sel_degree option")[num_degree]).attr("selected","selected");
+                
+                jQuery("#ac_major").autocomplete({source: academic_majors});
+                jQuery("#ac_jobtitle").autocomplete({source: careers});
+                
+                // conditional fields
+                jQuery("#sel_visatype").on("change", function(){
+                    jQuery(".conditional_field").hide();
+                    if (this.value == 1 || this.value == 2) { // f
+                        jQuery("#field_university").show();
+                        jQuery("#field_degree").show();
+                        jQuery("#field_major").show();
+                    }else if (this.value == 3 || this.value == 4) { // h
+                        jQuery("#field_employer").show();
+                        jQuery("#field_jobtitle").show();
+                    }else if (this.value == 5 || this.value == 6) { // j
+                        jQuery("#field_university").show();
+                        jQuery("#field_degree").show();
+                        jQuery("#field_major").show();
+                    }else if (this.value == 7 || this.value == 8) { // b
+                        
+                    }else if (this.value == 9 || this.value == 10) { // l
+                        jQuery("#field_employer").show();
+                        jQuery("#field_jobtitle").show();
+                    }else{ // value is 0 and other
+                        
+                    }
+                }).change();
+                
+                // add tooltips
+                $( document ).tooltip({position: {  my: "left top", at: "right+5 top-5" }});
             }
         });
     </script>

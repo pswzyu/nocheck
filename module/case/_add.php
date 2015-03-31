@@ -38,7 +38,7 @@ $info["consulate"] = isset($_POST["consulate"])?$_POST["consulate"]:"";
 $info["yearsinusa"] = isset($_POST["yearsinusa"])?$_POST["yearsinusa"]:"";
 $info["citizenship"] = isset($_POST["citizenship"])?$_POST["citizenship"]:"";
 $info["university"] = isset($_POST["university"])?$_POST["university"]:"";
-$info["degree"] = isset($_POST["university"])?$_POST["degree"]:"";
+$info["degree"] = isset($_POST["degree"])?$_POST["degree"]:"";
 $info["major"] = isset($_POST["major"])?$_POST["major"]:"";
 $info["employer"] = isset($_POST["employer"])?$_POST["employer"]:"";
 $info["jobtitle"] = isset($_POST["jobtitle"])?$_POST["jobtitle"]:"";
@@ -91,6 +91,7 @@ $_SESSION['captcha'] = simple_php_captcha();
                     value="<?php echo $info["email"]; ?>"/><span class="form_req">*</span></td></tr>
             <tr><td>Password</td><td><input type="password" name="password"
                     value="<?php echo $info["password"]; ?>"/><span class="form_req">*</span></td></tr>
+            
             <tr><td>First Name</td><td><input type="text" name="firstname"
                                               value="<?php echo $info["firstname"]; ?>"/></td></tr>
             <tr><td>Last Name</td><td><input type="text" name="lastname"
@@ -104,10 +105,12 @@ $_SESSION['captcha'] = simple_php_captcha();
                         <option value="7">B1</option><option value="8">B2</option>
                         <option value="9">L1</option><option value="10">L2</option>
                     </select><span class="form_req">*</span></td></tr>
-            <tr><td>Visa Entry</td><td><select id="sel_visaentry" type="text" name="visaentry">
+            
+            <tr><td>Application Type</td><td><select id="sel_visaentry" type="text" name="visaentry">
                         <option value="0" disabled selected >-- Please Select --</option>
                         <option value="1">New</option><option value="2">Renewal</option>
                     </select><span class="form_req">*</span></td></tr>
+            
             <tr><td>US Consulate</td><td><select id="sel_consulate" name="consulate">
                         <option value="0" disabled selected >-- Please Select --</option>
                         <option value="1">BeiJing</option><option value="2">ChengDu</option>
@@ -121,25 +124,33 @@ $_SESSION['captcha'] = simple_php_captcha();
                         <option value="17">Toronto</option><option value="18">Vancouver</option>
                         <option value="19">Others</option>
                     </select><span class="form_req">*</span></td></tr>
+            
             <tr><td>Years In USA</td><td><input type="text" name="yearsinusa"
                                                 value="<?php echo $info["yearsinusa"]; ?>"></td></tr>
+            
             <tr><td>Citizenship</td><td><input type="text" name="citizenship"
                                                value="<?php echo $info["citizenship"]; ?>"></td></tr>
             
-            <tr><td>University(College)</td><td><input type="text" name="university"
-                                                       value="<?php echo $info["university"]; ?>"></td></tr>
-            <tr><td>Degree</td><td><select id="sel_degree" name="degree">
+            <tr id="field_university" class="conditional_field"><td>University(College)</td><td><input type="text" name="university"
+                    value="<?php echo $info["university"]; ?>"><span class="form_req">*</span></td></tr>
+            
+            <tr id="field_degree" class="conditional_field"><td>Degree</td><td><select id="sel_degree" name="degree">
                         <option value="0" disabled selected >-- Please Select --</option>
                         <option value="1">N/A</option><option value="2">BS</option>
                         <option value="3">MS</option><option value="4">Ph.D</option>
                         <option value="5">Others</option>
                     </select><span class="form_req">*</span></td></tr>
-            <tr><td>Major</td><td><input id="ac_major" type="text" name="major" value="<?php echo $info["major"]; ?>">
-                    </td></tr>
-            <tr><td>Employer</td><td><input type="text" name="employer"
-                                            value="<?php echo $info["employer"]; ?>"></td></tr>
-            <tr><td>Job Title</td><td><input type="text" name="jobtitle"
-                                             value="<?php echo $info["jobtitle"]; ?>"></td></tr>
+            
+            <tr id="field_major" class="conditional_field"><td>Major</td><td><input id="ac_major" type="text" name="major"
+                    title="Enter &quot;Other&quot; if you can't find your major"
+                    value="<?php echo $info["major"]; ?>"><span class="form_req">*</span></td></tr>
+            
+            <tr id="field_employer" class="conditional_field"><td>Employer/Company</td><td><input type="text" name="employer"
+                    value="<?php echo $info["employer"]; ?>"><span class="form_req">*</span></td></tr>
+            
+            <tr id="field_jobtitle" class="conditional_field"><td>Job Title</td><td><input id="ac_jobtitle" type="text" name="jobtitle"
+                    title="Enter &quot;Other&quot; if you can't find your job title"
+                    value="<?php echo $info["jobtitle"]; ?>"><span class="form_req">*</span></td></tr>
             
             <tr><td>Apply Date</td><td><input id="dp_applydate" type="text" name="applydate"
                                               value="<?php echo $info["applydate"]; ?>"></td></tr>
