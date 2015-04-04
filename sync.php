@@ -19,6 +19,7 @@
 
 include_once("./common/types.php");
 include_once("./common/functions.php");
+include_once("./common/utils/log.php");
 include_once("./lib/db/mysql.inc.php");
 include_once("./common.php");
 
@@ -398,7 +399,7 @@ while ($open_case = $udb -> fetch_assoc($query_handle))
         $new_status = $co->convertStatusNameToCode($result_parts[1]);
         // if the new status is an unknown status, record this exception in the database
         if ($new_status == 0) {
-            log_unexpected_event($udb, "unknown visa status", $check_result);
+            log_unexpected_event($udb, "unknown visa status", $open_case["DOS_CaseId"].":".$check_result);
             // notify the admin
             $mail->Subject = "ALERT: visa checking error!";
             $mail->ClearAddresses();

@@ -330,6 +330,8 @@ class CaseOperation {
             return 5;
         }elseif ($status_name == "Ready"){ // ?
             return 4;
+        }elseif ($status_name == "Refused"){
+            return 3;
         }elseif ($status_name == "Administrative Processing"){
             return 2;
         }elseif ($status_name == "Issued"){
@@ -350,7 +352,7 @@ class CaseOperation {
             case 2:
                 return "Administrative Processing";
             case 3:
-                return "Rejected";
+                return "Refused";
             case 4:
                 return "Ready";
             case 5:
@@ -396,6 +398,10 @@ class CaseOperation {
     {
         $cut1 = 2;
         $cut2 = 3;
+        
+        if (strlen($dsid)-$cut1-$cut2 < 1) {
+            return str_repeat("*", $cut1+$cut2);
+        }
         
         $first = substr($dsid, 0, $cut1);
         $second = str_repeat("*", strlen($dsid)-$cut1-$cut2);

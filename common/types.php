@@ -33,7 +33,7 @@ class Enums
     public static $enum_status = array( "", "Clear", "Pending", "Reject" );
     
     public static $enum_status_name = array("", "Issued", "Administrative Processing",
-        "Rejected", "Ready", "No Status");
+        "Refused", "Ready", "No Status");
 
     public static $enum_degree = array( "", "N/A", "BS", "MS", "Ph.D", "Others" );
 }
