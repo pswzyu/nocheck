@@ -36,7 +36,7 @@ page.open("https://ceac.state.gov/CEACStatTracker/Status.aspx?App=NIV", function
         var error_result = page.evaluate(function(){
             return document.querySelector("span#ctl00_ContentPlaceHolder1_lblError");
         });
-        if (error_result.attributes != null)
+        if (error_result.innerHTML != "")
         {
             console.log("failed,No data!");
             phantom.exit();
