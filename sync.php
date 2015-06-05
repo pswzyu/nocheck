@@ -335,8 +335,6 @@ $mail = new PHPMailer();
 $mail->Username = $config_email_username; // your GMail user name
 $mail->Password = $config_email_password;
 $mail->FromName = $config_email_fromname; // readable name
-
-$mail->Subject = $config_email_subject;
 //-----------------------------------------------------------------------
 
 $mail->Host = "ssl://smtp.gmail.com"; // GMail
@@ -353,6 +351,8 @@ while ($open_case = $udb -> fetch_assoc($query_handle))
     
     $result_parts = explode(",", $check_result);
     
+    echo "On Case ".$open_case["DOS_CaseId"].": ".$check_result.": ";
+    
     if ($result_parts[0] == "failed")
     {
         // check the reason
@@ -361,6 +361,7 @@ while ($open_case = $udb -> fetch_assoc($query_handle))
             if ($open_case["InfoStatus"] == 0) {
                 echo "Email to {$open_case["Email"]}, case ID {$open_case["DOS_CaseId"]} is incorrect!\n";
                 
+                $mail->Subject = "ALERT: Invalid caseid!";
                 $mail->ClearAddresses();
                 $mail->AddAddress($open_case["Email"]); // recipients email
                 $mail->Body    = sprintf($config_email_error_body, $open_case["id"]);
@@ -384,8 +385,8 @@ while ($open_case = $udb -> fetch_assoc($query_handle))
             $mail->Subject = "ALERT: visa checking error!";
             $mail->ClearAddresses();
             $mail->AddAddress($config_email_username); // recipients email
-            $mail->Body    = "ALERT:visa checking took too much time:"+$open_case["DOS_CaseId"]+
-                    ", "+$check_result;
+            $mail->Body    = "ALERT:visa checking took too much time:".$open_case["DOS_CaseId"].
+                    ", ".$check_result;
 
             $send_result = $config_email_send ? $mail->Send() : FALSE;
                 
@@ -393,6 +394,9 @@ while ($open_case = $udb -> fetch_assoc($query_handle))
                 echo "Message has been sent!\n";
             else
                 echo "Mailer Error: " . $mail->ErrorInfo."\n";
+        }elseif ($result_parts[1] == "No data!") {
+            // don't need to do anything
+            echo "Case has no data now!";
         }
     }elseif($result_parts[0] == "success"){
         // only email the user when status changes
@@ -404,7 +408,7 @@ while ($open_case = $udb -> fetch_assoc($query_handle))
             $mail->Subject = "ALERT: visa checking error!";
             $mail->ClearAddresses();
             $mail->AddAddress($config_email_username); // recipients email
-            $mail->Body    = "ALERT:unknown visa status:"+$open_case["DOS_CaseId"]+", "+$check_result;
+            $mail->Body    = "ALERT:unknown visa status:".$open_case["DOS_CaseId"].", ".$check_result;
 
             $send_result = $config_email_send ? $mail->Send() : FALSE;
                 
@@ -470,6 +474,7 @@ while ($open_case = $udb -> fetch_assoc($query_handle))
                 $udb->query($sql);
 
                 // and then notify the user using email
+                $mail->Subject = $config_email_subject;
                 $mail->ClearAddresses();
                 $mail->AddAddress($open_case["Email"]); // recipients email
                 $mail->Body    = sprintf($config_email_body, $open_case["DOS_CaseId"],

@@ -32,6 +32,16 @@ page.open("https://ceac.state.gov/CEACStatTracker/Status.aspx?App=NIV", function
             console.log("failed,Invalid caseid!");
             phantom.exit();
         }
+        // check other errors
+        var error_result = page.evaluate(function(){
+            return document.querySelector("span#ctl00_ContentPlaceHolder1_lblError");
+        });
+        if (error_result.attributes != null)
+        {
+            console.log("failed,No data!");
+            phantom.exit();
+        }
+        
         // check the result
         var result_div = page.evaluate(function(){
             return document.querySelector("span#ctl00_ContentPlaceHolder1_ucApplicationStatusView_lblStatus");
