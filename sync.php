@@ -396,7 +396,7 @@ while ($open_case = $udb -> fetch_assoc($query_handle))
                 echo "Mailer Error: " . $mail->ErrorInfo."\n";
         }elseif ($result_parts[1] == "No data!") {
             // don't need to do anything
-            echo "Case has no data now!";
+            echo "Case has no data now!\n";
         }
     }elseif($result_parts[0] == "success"){
         // only email the user when status changes
