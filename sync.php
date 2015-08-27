@@ -419,24 +419,32 @@ while ($open_case = $udb -> fetch_assoc($query_handle))
             
         }else{
             // get the last update time
-            $query_handle_last_update = $udb->query("SELECT DATE(`update_time`) FROM `nocheck_case_update`
+            
+            $last_update_date = null;
+            $last_status_code = $open_case["ApplicationStatus"];
+            
+            $query_handle_last_update = $udb->query("SELECT DATE(`update_time`),`status_code` FROM `nocheck_case_update`
                 WHERE `status_code`<100 and `case_id`={$open_case["id"]} ORDER BY `update_time` DESC;");
                 
-            $last_update_date = $udb->fetch_assoc($query_handle_last_update);
-            $udb->free_result($query_handle_last_update);
-            if ($last_update_date) {
+            $last_update = $udb->fetch_assoc($query_handle_last_update);
+            
+            if ($last_update) {
                 $last_update_date = $last_update_date["DATE(`update_time`)"];
-            }
+                $last_status_code = $last_update["status_code"];
+            } 
+            
+            
+            $udb->free_result($query_handle_last_update);            
             
             $case_start_date = date_format(date_create_from_format("d-M-Y", $result_parts[2]), "Y-m-d");
             $case_update_date = date_format(date_create_from_format("d-M-Y", $result_parts[3]), "Y-m-d");
-            // if the update date changeg or the status changed
             
+            // if the update date changeg or the status changed
             if ( ($last_update_date && $case_update_date != $last_update_date) ||
-                    ($new_status != intval($open_case["ApplicationStatus"])) )
+                    $new_status != intval($last_status_code) )
             {
                 echo "Email to: {$open_case["Email"]}, {$open_case["DOS_CaseId"]}"
-                    . " from ".Enums::$enum_status_name[intval($open_case["ApplicationStatus"])]." to "
+                    . " from ".Enums::$enum_status_name[intval($last_status_code)]." to "
                     .Enums::$enum_status_name[$new_status].".\n";
                 // need to update the database first
                 // if the visa has been issued/rejected, also update the summary table
@@ -478,7 +486,7 @@ while ($open_case = $udb -> fetch_assoc($query_handle))
                 $mail->ClearAddresses();
                 $mail->AddAddress($open_case["Email"]); // recipients email
                 $mail->Body    = sprintf($config_email_body, $open_case["DOS_CaseId"],
-                        Enums::$enum_status_name[intval($open_case["ApplicationStatus"])],
+                        Enums::$enum_status_name[intval($last_status_code)],
                         Enums::$enum_status_name[$new_status], $case_update_date );
 
                 $send_result = $config_email_send ? $mail->Send() : FALSE;
