@@ -323,7 +323,7 @@ if ($ac == "ceac"){
 
 include_once __DIR__.DIRECTORY_SEPARATOR.'./classes/CaseOperation.class.php';
 
-$sql = "SELECT * FROM `nocheck_cases` WHERE `ApplicationStatus`=2 AND (`DOS_CaseId` IS NOT NULL)";
+$sql = "SELECT * FROM `nocheck_cases` WHERE `InfoStatus`=0 AND `ApplicationStatus`=2 AND (`DOS_CaseId` IS NOT NULL)";
 $query_handle = $udb->query($sql);
 
 $co = new CaseOperation($udb);
@@ -357,29 +357,28 @@ while ($open_case = $udb -> fetch_assoc($query_handle))
     {
         // check the reason
         if ($result_parts[1] == "Invalid caseid!") {
-            // tell the user if we haven't
-            if ($open_case["InfoStatus"] == 0) {
-                echo "Email to {$open_case["Email"]}, case ID {$open_case["DOS_CaseId"]} is incorrect!\n";
-                
-                $mail->Subject = "ALERT: Invalid caseid!";
-                $mail->ClearAddresses();
-                $mail->AddAddress($open_case["Email"]); // recipients email
-                $mail->Body    = sprintf($config_email_error_body, $open_case["id"]);
+            
+            echo "Email to {$open_case["Email"]}, case ID {$open_case["DOS_CaseId"]} is incorrect!\n";
 
-                $send_result = $config_email_send ? $mail->Send() : FALSE;
-                
-                if($send_result)
-                    echo "Message has been sent!\n";
-                else
-                    echo "Mailer Error: " . $mail->ErrorInfo."\n";
-                
-                // record in the database that this record is not correct
-                $sql = "UPDATE `nocheck_cases` SET
-                            `InfoStatus`='1'
-                        WHERE
-                            `id`={$open_case["id"]}";
-                    $udb->query($sql);
-            }
+            $mail->Subject = "ALERT: Invalid caseid!";
+            $mail->ClearAddresses();
+            $mail->AddAddress($open_case["Email"]); // recipients email
+            $mail->Body    = sprintf($config_email_error_body, $open_case["id"]);
+
+            $send_result = $config_email_send ? $mail->Send() : FALSE;
+
+            if($send_result)
+                echo "Message has been sent!\n";
+            else
+                echo "Mailer Error: " . $mail->ErrorInfo."\n";
+
+            // record in the database that this record is not correct
+            $sql = "UPDATE `nocheck_cases` SET
+                        `InfoStatus`='1'
+                    WHERE
+                        `id`={$open_case["id"]}";
+            $udb->query($sql);
+            
         }elseif ($result_parts[1] == "Time limit exceeded!") {
             // tell the admin
             $mail->Subject = "ALERT: visa checking error!";
